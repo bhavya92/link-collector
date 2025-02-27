@@ -1,5 +1,6 @@
 import { createClient, RedisClientType } from "redis";
 import "dotenv/config";
+import { appLogger } from "../utils/logger.js";
 
 const redisClient: RedisClientType = createClient({
   username: process.env.REDIS_USERNAME,
@@ -11,19 +12,19 @@ const redisClient: RedisClientType = createClient({
 });
 
 redisClient.on("connect", () => {
-  console.log("Redis Connected Successfully");
+  appLogger.info("Redis Connected Successfully");
 });
 
 redisClient.on("ready", () => {
-  console.log("Redis client is ready to use.");
+  appLogger.info("Redis client is ready to use.");
 });
 
 redisClient.on("error", (err) => {
-  console.log("Redis connection error.", err);
+  appLogger.error(`Redis Connection error : ${err}`);
 });
 
 redisClient.on("end", () => {
-  console.log("Redis client disconnected.");
+  appLogger.info("Redis client disconnected.");
 });
 
 async function connect_redis() {
@@ -37,10 +38,10 @@ export async function setData(key: string, value: object, expiration = 300) {
     await redisClient.set(key, JSON.stringify(value), {
       EX: expiration,
     });
-    console.log(`Stored "${key}":`, value);
+    appLogger.info(`Stored "${key}": ${value}`);
     return true;
   } catch (err) {
-    console.log("Error setting key", err);
+    appLogger.error(`Error setting key ${err}`);
     return false;
   }
 }
@@ -48,10 +49,10 @@ export async function setData(key: string, value: object, expiration = 300) {
 export async function getData(key: string) {
   try {
     const value = await redisClient.get(key);
-    console.log(`Got "${key}":`, value);
+    appLogger.info(`Got "${key}": ${value}`);
     return value;
   } catch (err) {
-    console.log("Error getting key", err);
+    appLogger.error(`Error getting key ${err}`);
     return 0;
   }
 }

@@ -1,6 +1,7 @@
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { createTransport } from "nodemailer";
 import "dotenv/config";
+import { appLogger } from "../utils/logger.js";
 
 const transporter = createTransport({
   service: process.env.EMAIL_CLIENT,
@@ -22,13 +23,14 @@ export const send_mail = async (
     subject,
     text,
   };
-  let success = true;
+  const success = true;
   try {
-    let mail_response = await transporter.sendMail(mailOptions);
+    const mail_response = await transporter.sendMail(mailOptions);
     console.log("mail_response", mail_response);
+    appLogger.info(`Mail sent to ${from}->${to}, SUB : ${subject}`);
     return success;
   } catch (err) {
-    console.error("Error Sending Mail", err);
+    appLogger.error(`Error Sending Mail ${err}`);
     return !success;
   }
 };

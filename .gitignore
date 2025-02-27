@@ -2,3 +2,4 @@ backend/.env
 backend/dist
 todo.md
 backend/node_modules
+backend/logs

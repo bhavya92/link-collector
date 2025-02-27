@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  checkUserExist,
   createUser,
   send_otp_to_email,
   user_validated,
@@ -10,14 +11,24 @@ import {
   validate_password,
   validate_username,
 } from "../utils/input_validation.js";
-import { hash_password } from "../utils/hash.js";
+import { comapre_hash, hash_password } from "../utils/hash.js";
 import { generate_jwt } from "../utils/jwt.js";
 import { appLogger } from "../utils/logger.js";
+import { CustomRequest } from "../middlewares/authenticated.js";
 
 export const signup_verifyEmail = async (req: Request, res: Response) => {
   appLogger.info("/signup/verify-email hitted");
   const email = req.body.email;
   
+  const user_exist_res = await checkUserExist(email);
+  if(user_exist_res.sucess) {
+    appLogger.warn(`${email} requested signup but exists`);
+    res.status(403).json({
+      message: "Email already exist",
+    })
+    return;
+  }
+
   const validate_email_res = await validate_email(email); 
   if (!validate_email_res) {
     appLogger.warn(`Failed ${email} input validation `);
@@ -139,26 +150,93 @@ export const signup_addNewUser = async (req: Request, res: Response) => {
   }
   const userId = create_user_res.data!._id.toString();
   const jwt_token = generate_jwt(userId);
-  // res.status(200)
-  // .cookie("token", jwt_token, {
-  //   httpOnly: true,
-  //   secure: true,
-  //   sameSite: "none",
-  //   expires: new Date(Date.now() + 7 * 24 * 3600000),
-  // })
-  // .json({
-  //   message: "Signup Success",
-  //   email: create_user_res.data!.email,
-  //   userName : create_user_res.data!.userName,
-  // });
-  res.status(200).json({
+  res.status(200)
+  .cookie("token", jwt_token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    expires: new Date(Date.now() + 7 * 24 * 3600000),
+  })
+  .json({
     message: "Signup Success",
-    jwt: jwt_token,
+    email: create_user_res.data!.email,
+    userName : create_user_res.data!.userName,
+  });
+  // res.status(200).json({
+  //   message: "Signup Success",
+  //   jwt: jwt_token,
+  // });
+};
+
+export const loginUser = async (req: Request, res: Response) => {
+  appLogger.info(`/login hitted`);
+  const uniqueId = req.body.uniqueId;
+  const password = req.body.password;
+
+  const user_exist_res = await checkUserExist(uniqueId);
+  if(!user_exist_res.sucess) {
+    appLogger.warn(`${uniqueId} requested login but doesn't exist`);
+    res.status(400).json({
+      message: "Email or Username not found",
+    })
+    return;
+  }
+
+  const user_hash = await hash_password(password);
+  if (user_hash === "no_hash") {
+    appLogger.error(`Error generating hash for ${uniqueId}`);
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+    return;
+  }
+  appLogger.info(`hash generation successful for ${uniqueId} password`);  
+
+  const comapre_hash_res = comapre_hash(user_exist_res.userFound!.password, user_hash);
+  if(!comapre_hash_res) {
+    appLogger.warn(`Password Incorrect for ${uniqueId}`);
+    res.status(403).json({
+      message:"Incorrect Credentials",
+    });
+    return;
+  }
+
+  const userId = user_exist_res.userFound!._id.toString();
+  const jwt_token = generate_jwt(userId);
+  appLogger.info(`${uniqueId} login success`) 
+  res.status(200)
+  .cookie("token", jwt_token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    expires: new Date(Date.now() + 7 * 24 * 3600000),
+  })
+  .json({
+    message: "Signup Success",
+    email: user_exist_res.userFound!.email,
+    userName : user_exist_res.userFound!.userName,
+  });
+   
+  // res.status(200).json({
+  //   message:"Success Login",
+  //   jwt: jwt_token,
+  // });
+};
+
+export const logoutUser = async (req: Request, res: Response) => {
+  const userId = (req as CustomRequest).userId;
+  appLogger.info(`logging out ${userId}`);
+  res
+  .status(200)
+  .cookie("token", "", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    expires: new Date(0),
+  })
+  .json({
+    message: "User logeged out",
   });
 };
 
-export const signup_loginUser = async (req: Request, res: Response) => {};
-
-export const signup_logoutUser = async (req: Request, res: Response) => {};
-
-export const signup_resetPassword = async (req: Request, res: Response) => {};
+export const resetPassword = async (req: Request, res: Response) => {};

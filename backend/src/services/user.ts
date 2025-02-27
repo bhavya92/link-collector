@@ -73,3 +73,31 @@ export const createUser = async (
     };
   }
 };
+
+export const checkUserExist = async(uniqueId : string) => {
+  try {
+    const userFound = await UserModel.findOne(
+      {
+        $or : [
+          {email : uniqueId},
+          {userName : uniqueId},
+        ]
+      }
+    ).lean();
+    if(userFound === null) {
+      appLogger.info(`${uniqueId} doesn't exist`);
+    } else {
+      appLogger.info(`${uniqueId} found`);
+    }
+    return {
+      userFound,
+      sucess : true,
+    }
+  } catch(err) {
+    appLogger.error(err);
+    return {
+      userFound : null,
+      sucess : false,
+    }
+  }
+}

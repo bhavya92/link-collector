@@ -4,4 +4,4 @@ const schema = new Schema({
   title: { type: String, required: true, unique: true },
 });
 
-export const TagModel = model("Tags", schema);
+export const TagModel = model("tags", schema);

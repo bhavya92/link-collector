@@ -56,3 +56,14 @@ export async function getData(key: string) {
     return 0;
   }
 }
+
+export async function delData(key: string) {
+  try{
+    await redisClient.del([key]);
+    appLogger.info(`Deleted ${key}`);
+    return true;
+  } catch(err) {
+    appLogger.error(err);
+    return false;
+  }
+}

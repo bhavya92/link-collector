@@ -2,8 +2,11 @@ import { Request, Response } from "express";
 import {
   checkUserExist,
   createUser,
+  generate_link,
   send_otp_to_email,
+  update_user_password,
   user_validated,
+  validate_reset_token,
   verify_otp,
 } from "../services/user.js";
 import {
@@ -15,6 +18,11 @@ import { comapre_hash, hash_password } from "../utils/hash.js";
 import { generate_jwt } from "../utils/jwt.js";
 import { appLogger } from "../utils/logger.js";
 import { CustomRequest } from "../middlewares/authenticated.js";
+
+interface ResetTokenValidation {
+  token?: string;
+  email?: string;
+}
 
 export const signup_verifyEmail = async (req: Request, res: Response) => {
   appLogger.info("/signup/verify-email hitted");
@@ -182,17 +190,7 @@ export const loginUser = async (req: Request, res: Response) => {
     return;
   }
 
-  const user_hash = await hash_password(password);
-  if (user_hash === "no_hash") {
-    appLogger.error(`Error generating hash for ${uniqueId}`);
-    res.status(500).json({
-      message: "Internal Server Error",
-    });
-    return;
-  }
-  appLogger.info(`hash generation successful for ${uniqueId} password`);  
-
-  const comapre_hash_res = comapre_hash(user_exist_res.userFound!.password, user_hash);
+  const comapre_hash_res = await comapre_hash(password,user_exist_res.userFound!.password);
   if(!comapre_hash_res) {
     appLogger.warn(`Password Incorrect for ${uniqueId}`);
     res.status(403).json({
@@ -239,4 +237,142 @@ export const logoutUser = async (req: Request, res: Response) => {
   });
 };
 
-export const resetPassword = async (req: Request, res: Response) => {};
+export const resetPasswordRequest = async (req: Request, res: Response) => {
+  appLogger.info(`resetPasswordRequest hitted`);
+  const email = req.body.email;
+  if(!email){
+    appLogger.warn(`${email} not provided`);
+    res.status(400).json({
+      message:"Invalid, please send email"
+    })
+    return;
+  }
+  
+  const validate_email_res = await validate_email(email); 
+  if (!validate_email_res) {
+    appLogger.warn(`Failed ${email} input validation `);
+    res.status(411).json({
+      message: "Erros in Input",
+    });
+    return;
+  }
+  appLogger.info(`${email} input validation ${validate_email_res}`);
+
+  const user_exist_res = await checkUserExist(email);
+  if(!user_exist_res.sucess) {
+    appLogger.warn(`${email} requested password reset but doesn't exist`);
+    res.status(404).json({
+      message: "Email not found",
+    })
+    return;
+  }
+  appLogger.info(`${email} exists in db`);
+
+  const generate_link_res = await generate_link(email);
+  if(!generate_link_res){
+    res.status(500).json({
+      message:'Error generating/sending mail'
+    })
+  }
+  res.status(200).json({
+    message:"password reset link send",
+  });
+};
+
+export const resetTokenValidation = async(req: Request<object,object,object,ResetTokenValidation>, res: Response) => {
+  const {token, email} = req.query;
+  appLogger.info(`/validate-reset-token hitted`);
+  if(email === undefined || token === undefined){
+    res.status(401).json({
+      message:"Invalid Link"
+    });
+  }
+
+  const validate_email_res = await validate_email(email!); 
+  if (!validate_email_res) {
+    appLogger.warn(`Failed ${email} input validation `);
+    res.status(411).json({
+      message: "Invalid Email",
+    });
+    return;
+  }
+  appLogger.info(`${email} input validation ${validate_email_res}`);
+
+  const user_exist_res = await checkUserExist(email!);
+  if(!user_exist_res.sucess) {
+    appLogger.warn(`${email} requested resetTokenValidation but doesn't exist`);
+    res.status(400).json({
+      message: "Email or Username not found",
+    })
+    return;
+  }
+  appLogger.info(`User ${email} exist in DB`);
+
+  const validate_token_res = await validate_reset_token(email!, token!);
+  if(validate_token_res){
+    appLogger.info(`Pass reset token validated for ${email}`);
+    res.status(200).json({
+      message:"Token is Valid"
+    });
+  } else {
+    res.status(400).json({
+      messsage:"Invalid or Expired token"
+    });
+  }
+}
+
+export const resetPassword = async(req: Request, res: Response) => {
+  const email = req.body.email;
+  const newPassword = req.body.password;
+  const passwordResetToken = req.body.token;
+
+  const user_exist_res = await checkUserExist(email);
+  if(!user_exist_res.sucess) {
+    appLogger.warn(`${email} requested password change but doesn't exist`);
+    res.status(400).json({
+      message: "Email not found, kindly redo password reset",
+    })
+    return;
+  }
+
+  const validate_token_res = await validate_reset_token(email!, passwordResetToken!);
+  if(!validate_token_res){
+    appLogger.warn(`Pass reset token validated for ${email}`);
+    res.status(400).json({
+      messsage:"Invalid or Expired token"
+    });
+    return;
+  } 
+
+  const validate_password_res = await validate_password(newPassword);
+  if (!validate_password_res) {
+    appLogger.warn(`Failed Password input validation ${email}`);
+    res.status(411).json({
+      message: "Erros in Input",
+    });
+    return;
+  }
+  appLogger.info(`Password input validation succesfull for ${email}`);
+
+  const pass_hash = await hash_password(newPassword);
+  if (pass_hash === "no_hash") {
+    appLogger.error(`Error generating hash for ${email}`);
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+    return;
+  }
+  appLogger.info(`hash generation successful for ${email} password`);
+
+  const update_pass_res = await update_user_password(email, pass_hash);
+  if(!update_pass_res){
+    res.status(500).json({
+      message:"Error updaing Password"
+    });
+    return;
+  }
+  appLogger.info(`Password updated of ${email}`);
+  res.status(200).json({
+    message:"Password updated Succesfully",
+  });
+}

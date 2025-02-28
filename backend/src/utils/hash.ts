@@ -19,5 +19,6 @@ export const comapre_hash = async (db_hash: string, user_hash: string) => {
     return result;
   } catch(err) {
     appLogger.error(`Error comparing hash ${err}`);
+    return false;
   }
 }

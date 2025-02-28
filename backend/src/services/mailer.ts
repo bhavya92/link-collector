@@ -26,8 +26,8 @@ export const send_mail = async (
   const success = true;
   try {
     const mail_response = await transporter.sendMail(mailOptions);
-    console.log("mail_response", mail_response);
     appLogger.info(`Mail sent to ${from}->${to}, SUB : ${subject}`);
+    appLogger.info(mail_response);
     return success;
   } catch (err) {
     appLogger.error(`Error Sending Mail ${err}`);

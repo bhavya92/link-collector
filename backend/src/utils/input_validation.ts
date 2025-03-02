@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+export const contentSchema = z.object({
+    link: z.string().url("Invalid Link").min(1,"Link required"),
+    type: z.enum(["audio","video","article","image","document","other"]),
+    title: z.string(),
+    tags : z.array(z.string()).optional()
+});
+
+export type ContentInput = z.infer<typeof contentSchema>;
+
 export const validate_email = async (email: string): Promise<boolean> => {
   const emailSchema: z.ZodString = z.string().toLowerCase().email();
   const validatedEmail = await emailSchema.spa(email);

@@ -1,6 +1,6 @@
 import { Schema, Types, model } from "mongoose";
 
-const contentTypes = ['image', 'video','article', 'audio']
+const contentTypes = ['image', 'video','article', 'audio', 'doc']
 const schema = new Schema({
     link: { type: String, required: true },
     type: { type: String, enum: contentTypes, required: true },

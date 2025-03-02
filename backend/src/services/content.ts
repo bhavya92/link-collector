@@ -1,4 +1,4 @@
-import { ContentInput, contentSchema } from "../utils/input_validation.js";
+import { ContentInput, contentSchema, I_updateContent } from "../utils/input_validation.js";
 import { categorizeByDomaint } from "../utils/linkType/categorizeBuUrl.js"
 import { categorizeByExtension } from "../utils/linkType/categorizeByExt.js"
 import { ContentModel } from "../models/content.js";
@@ -6,7 +6,6 @@ import { TagModel } from "../models/tags.js";
 import mongoose from "mongoose";
 import { DataNotFoundError } from "../utils/dataNotFound.js";
 import { appLogger } from "../utils/logger.js";
-
 
 
 export const find_category = (link: string) => {
@@ -126,8 +125,22 @@ export const delete_content = async(contentId: string) => {
     return result.deletedCount;
 }
 
-export const update_content = async(contentId : string, updateData) => {
+export const update_content = async(contentId : string, updateData: I_updateContent) => {
     const id = new mongoose.Types.ObjectId(contentId);
+    if(updateData.tags && updateData.tags.length > 0) {
+        const tagIds = await Promise.all(
+          updateData.tags!.map(async (tagTitle) => {
+              let tag = await TagModel.findOne({ title: tagTitle });
+
+              if (!tag) {
+                  tag = await new TagModel({ title: tagTitle }).save();
+              }
+
+              return tag._id;
+          })
+      )
+      updateData.tags = tagIds;
+    };
     const updatedData = await ContentModel.findByIdAndUpdate(
         id,
         { $set: updateData},

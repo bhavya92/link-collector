@@ -1,4 +1,12 @@
+import mongoose from "mongoose";
 import { z } from "zod";
+
+export interface I_updateContent {
+    link?: string,
+    type?: string,
+    title?: string,
+    tags?: string[] | mongoose.Types.ObjectId[],
+}
 
 export const contentSchema = z.object({
     link: z.string().url("Invalid Link").min(1,"Link required"),

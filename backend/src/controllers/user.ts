@@ -23,13 +23,11 @@ interface ResetTokenValidation {
   token?: string;
   email?: string;
 }
-
 export const signup_verifyEmail = async (req: Request, res: Response) => {
   appLogger.info("/signup/verify-email hitted");
   const email = req.body.email;
-  
   const user_exist_res = await checkUserExist(email);
-  if(user_exist_res.sucess) {
+  if(user_exist_res) {
     appLogger.warn(`${email} requested signup but exists`);
     res.status(403).json({
       message: "Email already exist",
@@ -56,7 +54,9 @@ export const signup_verifyEmail = async (req: Request, res: Response) => {
     return;
   }
   appLogger.info(`Otp send to ${email}`);
-  res.status(200).send();
+  res.status(200).json({
+    message: "Otp sent succesfully"
+  });
 };
 
 export const signup_verifyOtp = async (req: Request, res: Response) => {
@@ -182,7 +182,7 @@ export const loginUser = async (req: Request, res: Response) => {
   const password = req.body.password;
 
   const user_exist_res = await checkUserExist(uniqueId);
-  if(!user_exist_res.sucess) {
+  if(!user_exist_res) {
     appLogger.warn(`${uniqueId} requested login but doesn't exist`);
     res.status(400).json({
       message: "Email or Username not found",
@@ -190,7 +190,7 @@ export const loginUser = async (req: Request, res: Response) => {
     return;
   }
 
-  const comapre_hash_res = await comapre_hash(password,user_exist_res.userFound!.password);
+  const comapre_hash_res = await comapre_hash(password,user_exist_res!.password);
   if(!comapre_hash_res) {
     appLogger.warn(`Password Incorrect for ${uniqueId}`);
     res.status(403).json({
@@ -199,7 +199,7 @@ export const loginUser = async (req: Request, res: Response) => {
     return;
   }
 
-  const userId = user_exist_res.userFound!._id.toString();
+  const userId = user_exist_res!._id.toString();
   const jwt_token = generate_jwt(userId);
   appLogger.info(`${uniqueId} login success`) 
   res.status(200)
@@ -211,8 +211,8 @@ export const loginUser = async (req: Request, res: Response) => {
   })
   .json({
     message: "Signup Success",
-    email: user_exist_res.userFound!.email,
-    userName : user_exist_res.userFound!.userName,
+    email: user_exist_res!.email,
+    userName : user_exist_res!.userName,
   });
    
   // res.status(200).json({
@@ -259,7 +259,7 @@ export const resetPasswordRequest = async (req: Request, res: Response) => {
   appLogger.info(`${email} input validation ${validate_email_res}`);
 
   const user_exist_res = await checkUserExist(email);
-  if(!user_exist_res.sucess) {
+  if(!user_exist_res) {
     appLogger.warn(`${email} requested password reset but doesn't exist`);
     res.status(404).json({
       message: "Email not found",
@@ -299,7 +299,7 @@ export const resetTokenValidation = async(req: Request<object,object,object,Rese
   appLogger.info(`${email} input validation ${validate_email_res}`);
 
   const user_exist_res = await checkUserExist(email!);
-  if(!user_exist_res.sucess) {
+  if(!user_exist_res) {
     appLogger.warn(`${email} requested resetTokenValidation but doesn't exist`);
     res.status(400).json({
       message: "Email or Username not found",
@@ -327,7 +327,7 @@ export const resetPassword = async(req: Request, res: Response) => {
   const passwordResetToken = req.body.token;
 
   const user_exist_res = await checkUserExist(email);
-  if(!user_exist_res.sucess) {
+  if(!user_exist_res) {
     appLogger.warn(`${email} requested password change but doesn't exist`);
     res.status(400).json({
       message: "Email not found, kindly redo password reset",

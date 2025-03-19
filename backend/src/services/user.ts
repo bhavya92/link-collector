@@ -91,16 +91,10 @@ export const checkUserExist = async(uniqueId : string) => {
     } else {
       appLogger.info(`${uniqueId} found`);
     }
-    return {
-      userFound,
-      sucess : true,
-    }
+    return userFound;
   } catch(err) {
     appLogger.error(err);
-    return {
-      userFound : null,
-      sucess : false,
-    }
+    return null;
   }
 };
 

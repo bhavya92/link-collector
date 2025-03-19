@@ -5,10 +5,16 @@ import indexRouter from "./routes/index.js";
 import { appLogger } from "./utils/logger.js";
 import { httpLoggerMiddleware } from "./middlewares/httpLogger.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
-
+import cors from 'cors'
 const app: Express = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 app.use(httpLoggerMiddleware);
 app.use("/api/v1", indexRouter);
 app.use(errorHandler);

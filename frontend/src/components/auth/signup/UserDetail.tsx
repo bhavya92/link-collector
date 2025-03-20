@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from "react-hook-form"
 import { Button } from "../../ui/button"
 import { InputField } from "../../ui/input"
-import { password_repeat_validation, password_validation } from "../../../utils/inputValidations"
+import { name_validation, password_repeat_validation, password_validation } from "../../../utils/inputValidations"
 import { sendUserInfo } from "../../../services/signup"
 import { useState } from "react"
 
@@ -32,12 +32,12 @@ export const UserDetails = ({email, controlSignal} : {email:string, controlSigna
         onSubmit={e => e.preventDefault()}
         noValidate
         >
-        <div className="flex flex-col w-full h-full gap-y-3">
-            <InputField label="Username" id="username" inputType="text" size="sm" hint="username"/>
-            <InputField label="Password" id="password" validation={password_validation} inputType="password" size="sm" hint="Password"/>
-            <InputField label="Confirm Password" id="cpassword" validation={password_repeat_validation(methods.getValues)} inputType="password" size="sm" hint="Confirm Password"/>
+        <div className="flex flex-col w-full h-full gap-y-2">
+            <InputField label="Username" id="username" inputType="text" validation={name_validation} hint="username"/>
+            <InputField label="Password" id="password" validation={password_validation} inputType="password"  hint="Password"/>
+            <InputField label="Confirm Password" id="cpassword" validation={password_repeat_validation(methods.getValues)} inputType="password" hint="Confirm Password"/>
             <div className="w-full h-full flex flex-col justify-end">
-                <Button loading={loading} variant="primary" size="md" text="Signup" onClick={onSubmit}/>
+                <Button loading={loading} variant="primary" wfull={true} text="Signup" onClick={onSubmit}/>
             </div>
         </div>
         </form>

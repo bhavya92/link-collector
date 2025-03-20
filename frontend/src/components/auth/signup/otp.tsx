@@ -84,9 +84,10 @@ export const OtpGetter = ({detailFormView, email, controllerSignal}) => {
 
     return <div className="flex flex-col w-full h-full gap-y-4 justify-center p-4 items-center">
         <div className="flex flex-col basis-2/3 w-full justify-center">
-        <span className="ml-4 text-lg font-semibold">Enter OTP Below : </span>
+        <span className="ml-1 text-xs ls:text-sm 4k:text-2xl font-semibold">Enter OTP Below : </span>
         <div className="mt-3 flex justify-around w-full h-fit">
             {otp.map( (_,index) => (
+                <div className="w-6 h-8 mm:w-8 mm:h-10 4k:w-12 4k:h-14">
                 <input
                     key={index}
                     type="text"
@@ -95,19 +96,20 @@ export const OtpGetter = ({detailFormView, email, controllerSignal}) => {
                     onChange={(e) => handleChange(e.target.value, index)}
                     onKeyDown={(e) => handleKey(e,index)}
                     ref={(el) => {inputRef.current[index] = el as HTMLInputElement}}
-                    className="w-9 h-10 rounded-lg focus:outline-none text-center text-royal-blue-600  bg-slate-100 overflow-hidden focus:border-royal-blue-800 border-2"
+                    className="text-xs ml:text-sm 4k:text-xl w-full h-full rounded-lg focus:outline-none text-center text-royal-blue-800  bg-slate-100 overflow-hidden focus:border-royal-blue-800 border-2"
                 />
+                </div>
             ))}
         </div>
         { time > 0 ? 
-        <div className="ml-4 mt-4">
+        <div className="ml-1 mt-4 text-xs ls:text-sm 4k:text-2xl ">
             {time}
             <div className="pointer-events-none text-royal-blue-200">Generate New OTP</div>
         </div>
-            : <div className="text-royal-blue-700 cursor-pointer ml-4 mt-4" onClick={resendOtp}>Generate New OTP</div>}
+            : <div className="text-royal-blue-700 text-xs ls:text-sm 4k:text-2xl  cursor-pointer ml-1 mt-4" onClick={resendOtp}>Generate New OTP</div>}
         </div>
         <div className="basis-1/3 w-full flex flex-col justify-end">
-        <Button loading={loading} variant="primary" text="Verify OTP" size="md" onClick={handleOtpSubmit}/>
+        <Button loading={loading} variant="primary" text="Verify OTP" wfull={true} onClick={handleOtpSubmit}/>
         </div>
     </div>
 }

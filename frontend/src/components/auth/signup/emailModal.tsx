@@ -37,10 +37,10 @@ export const EmailModal = ({otpView, updateEmail, controllerSignal}) => {
             >    
             <div className="flex flex-col w-full h-full">
                 <div className="w-full basis-1/2 flex flex-col justify-end">
-                    <InputField validation={email_validation} label="Email" id="email" inputType="email" size="md" hint="Email"/>
+                    <InputField validation={email_validation} label="Email" id="email" inputType="email" hint="Email"/>
                 </div>  
                 <div className="w-full basis-1/2 flex flex-col justify-end">
-                    <Button loading={loading} variant="primary" size="md" text="Next" onClick={onSubmit}/>
+                    <Button loading={loading} variant="primary" wfull={true} text="Next" onClick={onSubmit}/>
                 </div>
             </div>
             </form>

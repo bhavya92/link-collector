@@ -4,8 +4,8 @@ import { SingupModal } from "../auth/signup/SignupModal";
 import { LoginModal } from "../auth/LoginModal";
 
 export const LandingPage = () => {
-    const [signUpModalOpen, setSignupModalOpen] = useState(false);
-    const [loginModalOpen, setLoginModalOpen ] = useState(false);
+    const [ signUpModalOpen, setSignupModalOpen ] = useState(false);
+    const [ loginModalOpen, setLoginModalOpen ] = useState(false);
     const [ showOtpBox, setShowOtpBox ] = useState(false); 
     const [ showDetailForm, setShowDetailForm ] = useState(false);
 
@@ -26,10 +26,7 @@ export const LandingPage = () => {
     }
 
     function closeSignupModal() {
-        console.log("Inside closeSignupModal");
-        console.log(`signal ${signal.aborted}`);
         controller.abort();
-        console.log(`signal ${signal.aborted}`);
         setSignupModalOpen(false);
         setShowOtpBox(false);
         setShowDetailForm(false);
@@ -45,11 +42,9 @@ export const LandingPage = () => {
     }
 
     return <div className="w-screen h-screen bg-slate-50">
-            <div className="flex w-full h-fit justify-end p-8">
-                <div className="flex w-80 h-fit gap-x-6">
-                    <Button variant="primary" text="Login" size="md" onClick={openLoginModal}/>
-                    <Button variant="secondary" text="Signup" size="md" onClick={openSignupModal}/>
-                </div>
+            <div className="flex w-full h-fit p-4 tb:p-6 ls:p-8 ll:p-10 4k:p-16 justify-between ml:justify-end ml:gap-x-2">
+                    <Button variant="primary" text="Login" onClick={openLoginModal}/>
+                    <Button variant="secondary" text="Signup" onClick={openSignupModal}/>
             </div>
             <SingupModal open={signUpModalOpen} onClose={closeSignupModal} otpModal={showOtpBox} detailModal={showDetailForm} viewOtpModal={handleOtpModalView} viewDetailFormModal={handleDetailModalView} signal={signal}/>
             <LoginModal open={loginModalOpen} onClose={closeLoginModal} />

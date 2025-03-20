@@ -6,20 +6,14 @@ import { isFormInvalid } from "../../utils/isFormValid";
 
 interface InputFieldProps {
     inputType : "email" | "number" | "text" | "password" ;
-    size : "sm" | "md" | "lg";
     hint?: string;
     id: string;
     label: string;
     validation?: object;
     onChange? : () => void
 }
-const sizeVariants = {
-    "sm" : "text-sm",
-    "md" : "text-base",
-    "lg" : "text-lg",
-}
 
-const defaultStyles = "px-3 py-2 w-full h-min rounded-sm border-2 border-royal-blue-400 text-slate-800 shadow-md focus:border-royal-blue-600 focus:outline-none bg-white";
+const defaultStyles = "text-xs ls:text-sm 4k:text-2xl px-3 py-2 w-full h-min rounded-sm border-2 border-royal-blue-400 text-slate-800 shadow-md focus:border-royal-blue-600 focus:outline-none bg-white";
 export const InputField = (props : InputFieldProps) => {
     const { register,formState: {errors} } = useFormContext();
     
@@ -27,7 +21,7 @@ export const InputField = (props : InputFieldProps) => {
     const isInvalid = isFormInvalid(inputError);
   
     return <div className="flex gap-y-2 flex-col">
-        <label htmlFor={props.id} className="text-md font-semibold">
+        <label htmlFor={props.id} className="text-xs ls:text-sm 4k:text-2xl font-semibold">
             {props.label + ":"}
         </label>
         <AnimatePresence mode="wait" initial={false}>
@@ -40,7 +34,7 @@ export const InputField = (props : InputFieldProps) => {
         </AnimatePresence>
         <input   type={`${props.inputType}`} 
         id={`${props.id}`}
-        className={`${sizeVariants[props.size]} ${defaultStyles}`} 
+        className={`${defaultStyles}`} 
         placeholder={`${props.hint ? props.hint : ''}`}
         {...register(props.label,props.validation)}
         /> 
@@ -50,7 +44,7 @@ export const InputField = (props : InputFieldProps) => {
 const InputError = ({message} : {message:string}) => {
     return (
         <motion.p
-          className="flex items-center gap-1 p-1 font-semibold text-red-500 bg-red-100 rounded-md"
+          className="flex items-center gap-1 p-1 text-xs ls:text-sm 4k:text-2xl font-semibold text-red-500 bg-red-100 rounded-md"
           {...framerError}
         >
             <ErrorIcon/>

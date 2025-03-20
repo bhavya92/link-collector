@@ -17,11 +17,11 @@ export const LandingPage = () => {
     }
 
     function closeLoginModal(){
+        controller.abort();
         setLoginModalOpen(false);
     }
 
     function openSignupModal() {
-        console.log("openSignupModal called");
         setSignupModalOpen(true);
     }
 

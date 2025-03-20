@@ -36,7 +36,7 @@ export const InputField = (props : InputFieldProps) => {
         id={`${props.id}`}
         className={`${defaultStyles}`} 
         placeholder={`${props.hint ? props.hint : ''}`}
-        {...register(props.label,props.validation)}
+        {...register(props.id,props.validation)}
         /> 
     </div>
 }

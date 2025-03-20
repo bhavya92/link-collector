@@ -12,7 +12,7 @@ export const UserDetails = ({email, controlSignal} : {email:string, controlSigna
     const onSubmit = methods.handleSubmit(data => {
     
         async function handleButtonSubmit() {
-            const res = await sendUserInfo(data.Username, email, data.Password, controlSignal);
+            const res = await sendUserInfo(data.username, email, data.password, controlSignal);
             setLoading(false);
             if(res.success) {
                 alert("User Created succesfully")
@@ -34,7 +34,7 @@ export const UserDetails = ({email, controlSignal} : {email:string, controlSigna
         >
         <div className="flex flex-col w-full h-full gap-y-2">
             <InputField label="Username" id="username" inputType="text" validation={name_validation} hint="username"/>
-            <InputField label="Password" id="password" validation={password_validation} inputType="password"  hint="Password"/>
+            <InputField label="Password" id="password" validation={password_validation} inputType="password"  hint="password"/>
             <InputField label="Confirm Password" id="cpassword" validation={password_repeat_validation(methods.getValues)} inputType="password" hint="Confirm Password"/>
             <div className="w-full h-full flex flex-col justify-end">
                 <Button loading={loading} variant="primary" wfull={true} text="Signup" onClick={onSubmit}/>

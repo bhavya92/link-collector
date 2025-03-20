@@ -11,7 +11,7 @@ export const EmailModal = ({otpView, updateEmail, controllerSignal}) => {
 
     const onSubmit = methods.handleSubmit(data => {
         async function handleButtonSubmit(){
-            const emailSent  = await sendEmail(data.Email, controllerSignal);
+            const emailSent  = await sendEmail(data.email, controllerSignal);
             if(emailSent.success){
                 updateEmail(data.Email);
                 setLoading(false);

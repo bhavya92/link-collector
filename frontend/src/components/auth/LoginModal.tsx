@@ -3,9 +3,10 @@ import { CloseIcon } from "../../icons/close"
 import { Button } from "../ui/button"
 import { InputField } from "../ui/input"
 import { useState } from "react";
-import { email_validation, password_validation } from "../../utils/inputValidations";
+import { email_validation, password_validation, userId_validation } from "../../utils/inputValidations";
+import { loginUser } from "../../services/login";
 
-export const LoginModal = ({open, onClose}) => {
+export const LoginModal = ({open, onClose, signal}) => {
     const methods = useForm();
     const [loading, setLoading] = useState(false);
 
@@ -15,9 +16,21 @@ export const LoginModal = ({open, onClose}) => {
     }
 
     const onSubmit = methods.handleSubmit(data => {
+        console.log({data})
+        async function handleLoginButton(){
+            const res = await loginUser(data.luniqueId, data.lpassword, signal);
+            setLoading(false);
+            if(res.success) {
+                methods.reset();
+                alert(res.message);
+            } else {
+                if(!res.abort) {
+                    alert(res.message);
+                }
+            }
+        }
         setLoading(true);
-        console.log(data);
-        setLoading(false);
+        handleLoginButton();
     });
 
     return <div>
@@ -39,7 +52,7 @@ export const LoginModal = ({open, onClose}) => {
                         </div>
                         <div className="p-4 w-full h-full flex flex-col">
                             <div className="flex flex-col basis-2/3 justify-evenly">
-                                <InputField validation={email_validation} label="Email" id="lemail" inputType="email" hint="Email"/>
+                                <InputField validation={userId_validation} label="Username/Email" id="luniqueId" inputType="text" hint="Username or Email"/>
                                 <InputField validation={password_validation} label="Password" id="lpassword" inputType="password" hint="Password"/>
                             </div>
                             <div className="flex flex-col justify-end basis-1/3">

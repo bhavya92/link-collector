@@ -1,5 +1,12 @@
 import { FieldValues, UseFormGetValues } from 'react-hook-form'
 
+export const userId_validation = {
+  required: {
+    value: true,
+    message: 'required',
+  },
+}
+
 export const email_validation = {
       required: {
         value: true,

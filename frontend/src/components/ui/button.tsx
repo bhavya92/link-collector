@@ -3,7 +3,6 @@ import { SpinnerLoader } from "./spinner";
 
 interface ButtonProps {
     variant : "primary" | "secondary" | "success" | "error";
-    // size : "sm" | "md" | "lg";
     text : string;
     icon?: ReactElement;
     loading? : boolean;
@@ -19,18 +18,12 @@ const buttonVariants = {
     "error" : "bg-red-500 text-white"
 }
 
-// const sizeVariants = {
-//     "sm" : "text-sm px-2 py-1",
-//     "md" : "text-base px-4 py-2",
-//     "lg" : "text-lg px-6 py-3"
-// }
-
 const stateVariants = {
     "disabled":"pointer-events-none",
     "hover": "",
     "loading":"pointer-events-none",
 }
-//TODO :text font and other text properties
+
 const defaultStyles = "flex justify-center items-center rounded-sm h-min cursor-pointer"
 const widthStyles = "w-20 ll:w-32 4k:w-40"
 const responsiveStyles = "text-xs px-1 py-1 ml:text-xs ml:px-1 ml:py-1 ls:text-sm ll:text-md ll:px-4 ll:py-2 4k:text-2xl"

@@ -97,6 +97,15 @@ export const signup_addNewUser = async (req: Request, res: Response) => {
   const email: string = req.body.email;
   const password: string = req.body.password;
 
+  const user_exist_res = await checkUserExist(username);
+  if(user_exist_res) {
+    appLogger.warn(`${username} requested signup but exists`);
+    res.status(403).json({
+      message: "Username already exist",
+    })
+    return;
+  }
+
   const user_validated_res = await user_validated(email);
 
   if (!user_validated_res) {
@@ -156,6 +165,9 @@ export const signup_addNewUser = async (req: Request, res: Response) => {
     });
     return;
   }
+
+  appLogger.info(`New User created ${email}`);
+
   const userId = create_user_res.data!._id.toString();
   const jwt_token = generate_jwt(userId);
   res.status(200)
@@ -170,10 +182,6 @@ export const signup_addNewUser = async (req: Request, res: Response) => {
     email: create_user_res.data!.email,
     userName : create_user_res.data!.userName,
   });
-  // res.status(200).json({
-  //   message: "Signup Success",
-  //   jwt: jwt_token,
-  // });
 };
 
 export const loginUser = async (req: Request, res: Response) => {
@@ -198,7 +206,7 @@ export const loginUser = async (req: Request, res: Response) => {
     });
     return;
   }
-
+  appLogger.info(`${uniqueId} loggedIn`)
   const userId = user_exist_res!._id.toString();
   const jwt_token = generate_jwt(userId);
   appLogger.info(`${uniqueId} login success`) 
@@ -215,10 +223,6 @@ export const loginUser = async (req: Request, res: Response) => {
     userName : user_exist_res!.userName,
   });
    
-  // res.status(200).json({
-  //   message:"Success Login",
-  //   jwt: jwt_token,
-  // });
 };
 
 export const logoutUser = async (req: Request, res: Response) => {
@@ -233,7 +237,7 @@ export const logoutUser = async (req: Request, res: Response) => {
     expires: new Date(0),
   })
   .json({
-    message: "User logeged out",
+    message: "User loggged out",
   });
 };
 

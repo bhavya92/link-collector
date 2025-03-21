@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   checkUserExist,
   createUser,
+  find_user,
   generate_link,
   send_otp_to_email,
   update_user_password,
@@ -378,5 +379,20 @@ export const resetPassword = async(req: Request, res: Response) => {
   appLogger.info(`Password updated of ${email}`);
   res.status(200).json({
     message:"Password updated Succesfully",
+  });
+}
+
+export const validateToken = async(req: Request, res: Response) => {
+  const userId = (req as CustomRequest).userId;
+  const user = await find_user(userId.toString());
+  if(!user.success) {
+    res.status(404).json({
+      message:"Kindly Login or Signup"
+    });
+    return;
+  }
+  res.status(200).json({
+    message:"valid token",
+    data:user.data,
   });
 }

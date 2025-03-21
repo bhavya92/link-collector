@@ -8,6 +8,7 @@ import {
   signup_addNewUser,
   signup_verifyEmail,
   signup_verifyOtp,
+  validateToken,
 } from "../controllers/user.js";
 import { authenticated } from "../middlewares/authenticated.js";
 
@@ -28,5 +29,7 @@ userRouter.get("/reset-password-request",resetPasswordRequest); // TODO : add ra
 userRouter.get("/validate-reset-token",resetTokenValidation); // TODO :add rate limiter 
 
 userRouter.post("/new-password", resetPassword);
+
+userRouter.get("/validate-token", authenticated, validateToken);
 
 export default userRouter;

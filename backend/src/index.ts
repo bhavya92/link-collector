@@ -6,8 +6,12 @@ import { appLogger } from "./utils/logger.js";
 import { httpLoggerMiddleware } from "./middlewares/httpLogger.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import cors from 'cors'
+import cookieParser from "cookie-parser";
+
+
 const app: Express = express();
 
+app.use(cookieParser())
 app.use(express.json());
 app.use(
   cors({

@@ -6,6 +6,7 @@ import { UserModel } from "../models/users.js";
 import { appLogger } from "../utils/logger.js";
 import crypto from "crypto";
 import { comapre_hash, hash_password } from "../utils/hash.js";
+import mongoose from "mongoose";
 
 export const send_otp_to_email = async (email: string) => {
   const otp: number = generate_otp();
@@ -164,5 +165,21 @@ export const update_user_password = async(email: string, hash: string) => {
     const send_mail_res = await send_mail(email, email_subject, email_body);
     if(!send_mail_res)
       appLogger.error(`Failed to send password change mail to ${email}`);
+  }
+}
+
+export const find_user = async(id: string) => {
+  const userFound = await UserModel.findById(new mongoose.Types.ObjectId(id)).select("-_id -password").lean();
+ 
+  if(userFound === null) {
+    return {
+      "success":false,
+      "data":null
+    };
+  } else {
+    return {
+      "success":true,
+      "data":userFound
+    }
   }
 }

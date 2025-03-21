@@ -35,7 +35,7 @@ export const email_validation = {
       value:true,
       message: 'required'
     },
-    validate: (value : string) => value === getValues("Password") || "Passwords do not match",
+    validate: (value : string) => value === getValues("password") || "Passwords do not match",
   });
 
   export const name_validation = {

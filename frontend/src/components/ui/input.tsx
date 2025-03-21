@@ -17,7 +17,7 @@ const defaultStyles = "text-xs ls:text-sm 4k:text-2xl px-3 py-2 w-full h-min rou
 export const InputField = (props : InputFieldProps) => {
     const { register,formState: {errors} } = useFormContext();
     
-    const inputError = findInputErrors(errors,props.label);
+    const inputError = findInputErrors(errors,props.id);
     const isInvalid = isFormInvalid(inputError);
   
     return <div className="flex gap-y-2 flex-col">

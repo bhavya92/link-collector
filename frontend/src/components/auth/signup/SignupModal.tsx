@@ -2,11 +2,14 @@ import { OtpGetter } from "./otp";
 import { UserDetails } from "./UserDetail";
 import { EmailModal } from "./emailModal";
 import { CloseIcon } from "../../../icons/close";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export const SingupModal = ({open, onClose, otpModal, detailModal,viewOtpModal, viewDetailFormModal, signal}) => {
     const [email, setEmail] = useState('');
+    useEffect(()=>{
+        console.log(`useEffect ${email}`);
+    },[email])
     return <div>
         {open && <div className="w-screen h-screen flex items-center bg-slate-100/50 justify-center fixed top-0 left-0 ">
             <div className="w-fit h-fit z-10 opacity-100">

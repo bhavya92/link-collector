@@ -13,7 +13,7 @@ export const EmailModal = ({otpView, updateEmail, controllerSignal}) => {
         async function handleButtonSubmit(){
             const emailSent  = await sendEmail(data.email, controllerSignal);
             if(emailSent.success){
-                updateEmail(data.Email);
+                updateEmail(data.email);
                 setLoading(false);
                 otpView();
             } else {

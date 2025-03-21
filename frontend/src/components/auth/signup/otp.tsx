@@ -10,7 +10,6 @@ export const OtpGetter = ({detailFormView, email, controllerSignal}) => {
     const [time, setTime] = useState(30);
 
     useEffect(()=>{
-        console.log(`time : ${time}`);
         const timer = setInterval(()=>{
             setTime((time) => time - 1);
         },1000)
@@ -57,6 +56,7 @@ export const OtpGetter = ({detailFormView, email, controllerSignal}) => {
     }
     const handleOtpSubmit = () => {
         console.log(otp);
+        console.log(email)
         const len = otp.filter((item) => item!=='').length;
         if(len<6){
             alert("Invalid OTP")

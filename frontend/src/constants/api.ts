@@ -8,3 +8,4 @@ export const SIGNUP = "/user/signup/new";
 export const RESET_PASSWORD_REQUEST = "/user/reset-password-request";
 export const VALIDATE_RESET_TOKEN = "/user/validate-reset-token";
 export const NEW_PASSWORD = "/user/new-password";
+export const VALIDATE_TOKEN = "/user/validate-token";

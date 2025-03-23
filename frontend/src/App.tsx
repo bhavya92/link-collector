@@ -3,7 +3,7 @@ import './App.css'
 import { LandingPage } from './components/landing/LandingPage'
 import { AuthContext } from './context/auth'
 import { Routes, Route, Navigate, BrowserRouter } from 'react-router-dom'
-import { HomePage } from './components/dashboard/HomePage'
+import { HomePage } from './components/home/HomePage'
 import { Loader } from './components/ui/loader'
 
 function App() {

@@ -52,8 +52,8 @@ export const LoginModal = ({open, onClose, signal}) => {
                         </div>
                         <div className="p-4 w-full h-full flex flex-col">
                             <div className="flex flex-col basis-2/3 justify-evenly">
-                                <InputField validation={userId_validation} label="Username/Email" id="luniqueId" inputType="text" hint="Username or Email"/>
-                                <InputField validation={password_validation} label="Password" id="lpassword" inputType="password" hint="Password"/>
+                                <InputField validate={true} validation={userId_validation} label="Username/Email" id="luniqueId" inputType="text" hint="Username or Email"/>
+                                <InputField validate={true} validation={password_validation} label="Password" id="lpassword" inputType="password" hint="Password"/>
                             </div>
                             <div className="flex flex-col justify-end basis-1/3">
                                 <Button loading={loading} variant="primary" wfull={true} text="Login" onClick={onSubmit}/>

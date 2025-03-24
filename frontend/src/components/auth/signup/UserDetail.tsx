@@ -33,9 +33,9 @@ export const UserDetails = ({email, controlSignal} : {email:string, controlSigna
         noValidate
         >
         <div className="flex flex-col w-full h-full gap-y-2">
-            <InputField label="Username" id="username" inputType="text" validation={name_validation} hint="username"/>
-            <InputField label="Password" id="password" validation={password_validation} inputType="password"  hint="password"/>
-            <InputField label="Confirm Password" id="cpassword" validation={password_repeat_validation(methods.getValues)} inputType="password" hint="Confirm Password"/>
+            <InputField validate={true} label="Username" id="username" inputType="text" validation={name_validation} hint="username"/>
+            <InputField validate={true} label="Password" id="password" validation={password_validation} inputType="password"  hint="password"/>
+            <InputField validate={true} label="Confirm Password" id="cpassword" validation={password_repeat_validation(methods.getValues)} inputType="password" hint="Confirm Password"/>
             <div className="w-full h-full flex flex-col justify-end">
                 <Button loading={loading} variant="primary" wfull={true} text="Signup" onClick={onSubmit}/>
             </div>

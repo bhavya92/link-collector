@@ -10,35 +10,41 @@ interface InputFieldProps {
     id: string;
     label: string;
     validation?: object;
+    validate : boolean;
     onChange? : () => void
 }
 
 const defaultStyles = "text-xs ls:text-sm 4k:text-2xl px-3 py-2 w-full h-min rounded-sm border-2 border-royal-blue-400 text-slate-800 shadow-md focus:border-royal-blue-600 focus:outline-none bg-white";
 export const InputField = (props : InputFieldProps) => {
-    const { register,formState: {errors} } = useFormContext();
-    
+   
+    const { register,formState: {errors} } = useFormContext(); 
     const inputError = findInputErrors(errors,props.id);
     const isInvalid = isFormInvalid(inputError);
   
-    return <div className="flex gap-y-2 flex-col">
-        <label htmlFor={props.id} className="text-xs ls:text-sm 4k:text-2xl font-semibold">
-            {props.label + ":"}
-        </label>
-        <AnimatePresence mode="wait" initial={false}>
-          {isInvalid && (
-            <InputError
-              message={inputError.error?.message || ""}
-              key={inputError.error?.message || "default-key"}
-            />
-          )}
-        </AnimatePresence>
-        <input   type={`${props.inputType}`} 
-        id={`${props.id}`}
-        className={`${defaultStyles}`} 
-        placeholder={`${props.hint ? props.hint : ''}`}
-        {...register(props.id,props.validation)}
-        /> 
-    </div>
+    return <>
+    {props.validate ? <div className="flex gap-y-2 flex-col">
+      <label htmlFor={props.id} className="text-xs ls:text-sm 4k:text-2xl font-semibold">
+          {props.label + ":"}
+      </label>
+      <AnimatePresence mode="wait" initial={false}>
+        {isInvalid && (
+          <InputError
+            message={inputError.error?.message || ""}
+            key={inputError.error?.message || "default-key"}
+          />
+        )}
+      </AnimatePresence>
+      <input   type={`${props.inputType}`} 
+      id={`${props.id}`}
+      className={`${defaultStyles}`} 
+      placeholder={`${props.hint ? props.hint : ''}`}
+      {...register(props.id,props.validation)}
+      /> 
+  </div>: <input type={`${props.inputType}`} 
+      id={`${props.id}`}
+      className={`${defaultStyles}`} 
+      placeholder={`${props.hint ? props.hint : ''}`}/>}
+  </>
 }
 
 const InputError = ({message} : {message:string}) => {

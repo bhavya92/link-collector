@@ -10,6 +10,7 @@ import { ProfileIcon } from "../../icons/profile";
 import { Button } from "../ui/button";
 import { UserDropDown } from "./userdropdown";
 import { AuthContext } from "../../context/auth";
+import { ContentModal } from "./NewContentModal";
 
 export const HomePage = () => {
     
@@ -21,7 +22,8 @@ export const HomePage = () => {
 
     const [expanded, setExpanded ] = useState(false);
     const  [showUser, setShowUser ] = useState(false);
-    
+    const [ newModal ,setNewModa ] = useState(false);
+
     function toggleSidebar() {
         setExpanded( prev => !prev);
     }
@@ -44,7 +46,7 @@ export const HomePage = () => {
         </div>
         <div className="w-full h-full flex flex-col z-10">
             <div className="w-full h-fit flex justify-end gap-x-2 px-4 pt-4 items-center">
-                <Button variant="secondary" text="Add Content"/>
+                <Button variant="secondary" text="Add Content" onClick={() => setNewModa(true)}/>
                 <div className="rounded-full w-fit h-fit bg-royal-blue-300 p-2 cursor-pointer" onClick={toggleuserDropDown}>
                     <ProfileIcon/>
                 </div>
@@ -53,6 +55,9 @@ export const HomePage = () => {
                 <div className="absolute top-2 right-4">
                     <UserDropDown isShown={showUser} email={user?.email} username={user?.userName} setUser={setUser}/>
                 </div>
+                {newModal ? <div className="pl-8 h-full w-full flex items-center justify-center">
+                    <ContentModal showModal={setNewModa}/>
+                </div> : null}
             </div>
         </div>
     </div> 

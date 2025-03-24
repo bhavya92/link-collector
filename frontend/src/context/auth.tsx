@@ -32,8 +32,8 @@ const AuthProvider = ({children}) => {
                 if(response.ok) {
                     const responseJson = await response.json();
                     setUser({
-                        "userName" : responseJson.userName,
-                        "email": responseJson.email,
+                        "userName" : responseJson.data.userName,
+                        "email": responseJson.data.email,
                     });
                 } else {
                     setUser(null);

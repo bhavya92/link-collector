@@ -13,6 +13,15 @@ import { AuthContext } from "../../context/auth";
 import { ContentModal } from "./NewContentModal";
 import { MegaphoneIcon } from "../../icons/megaphone";
 import { HomeIcon } from "../../icons/home";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { LandingPage } from "../landing/LandingPage";
+import { HomeContent } from "./homecontent";
+import { VideoContent } from "./videocontent";
+import { AudioContent } from "./audiocontent";
+import { ArticleContent } from "./articlecontent";
+import { ImageContent } from "./imagecontent";
+import { SocialContent } from "./socialcontent";
+import { TagsContent } from "./tagscontent";
 export const HomePage = () => {
     
     const auth = useContext(AuthContext);
@@ -20,7 +29,7 @@ export const HomePage = () => {
         throw new Error("check is authprovider provided");
     }
     const { user, setUser } = auth;
-
+    const navigate = useNavigate();
     const [expanded, setExpanded ] = useState(false);
     const  [showUser, setShowUser ] = useState(false);
     const [ newModal ,setNewModa ] = useState(false);
@@ -38,13 +47,13 @@ export const HomePage = () => {
                     : null}
         <div className="fixed inset-y-0 left-0 z-50">
             <Sidebar expanded={expanded} setExpanded={toggleSidebar}>
-                <SidebarItem expanded={expanded} icon={<HomeIcon/>} title={"Home"}/>
-                <SidebarItem expanded={expanded} icon={<VideoIcon/>} title={"Video"} />
-                <SidebarItem expanded={expanded} icon={<AudioIcon/>} title={"Audio"} />
-                <SidebarItem expanded={expanded} icon={<MegaphoneIcon/>} title={"Social"}/>
-                <SidebarItem expanded={expanded} icon={<ArticleIcon/>} title={"Article"} />
-                <SidebarItem expanded={expanded} icon={<ImageIcon/>} title={"Image"} /> 
-                <SidebarItem expanded={expanded} icon={<TagIcon/>} title={"Tags"} />
+                <SidebarItem expanded={expanded} icon={<HomeIcon/>} title={"Home"} onClick={() => navigate("/home")}/>
+                <SidebarItem expanded={expanded} icon={<VideoIcon/>} title={"Video"} onClick={() => navigate("/home/video")}/>
+                <SidebarItem expanded={expanded} icon={<AudioIcon/>} title={"Audio"} onClick={() => navigate("/home/audio")}/>
+                <SidebarItem expanded={expanded} icon={<MegaphoneIcon/>} title={"Social"} onClick={() => navigate("/home/social")}/>
+                <SidebarItem expanded={expanded} icon={<ArticleIcon/>} title={"Article"} onClick={() => navigate("/home/article")}/>
+                <SidebarItem expanded={expanded} icon={<ImageIcon/>} title={"Image"} onClick={() => navigate("/home/image")}/> 
+                <SidebarItem expanded={expanded} icon={<TagIcon/>} title={"Tags"} onClick={() => navigate("/home/tags")}/>
             </Sidebar>
         </div>
         <div className="w-full h-full flex flex-col z-10">
@@ -61,8 +70,18 @@ export const HomePage = () => {
                 {newModal ? <div className="pl-8 h-full w-full flex items-center justify-center">
                     <ContentModal showModal={setNewModa}/>
                 </div> : null}
-
-
+                <div className="pl-16">
+                <Routes>
+                    <Route path="/" element={<HomeContent />} />
+                    <Route path="video" element={<VideoContent />} />
+                    <Route path="audio" element={<AudioContent />} />
+                    <Route path="article" element={<ArticleContent />} />
+                    <Route path="image" element={<ImageContent />} />
+                    <Route path="social" element={<SocialContent />} />
+                    <Route path="tags" element={<TagsContent/>} />
+                    <Route path="*" element={<Navigate to="/home" />} />
+                </Routes>
+                </div>
             </div>
         </div>
     </div> 

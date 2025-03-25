@@ -1,3 +1,9 @@
 export const ROUTES = {
-    DASHBOARD: "/dashboard",
+    HOME: "/home",
+    VIDEO: "/videos",
+    AUDIO: "/audios",
+    SOCIAL: "/socials",
+    IMAGE: "/images",
+    ARTICLE: "/articles",
+    TAG: "/tags",
 }

@@ -77,7 +77,9 @@ export const sendUserInfo= async (userName: string, email : string, password: st
         return {
             "success" : response.status === 200,
             "message" : responseJson.message,
-            "abort" : false
+            "abort" : false,
+            "email" : responseJson.email,
+            "userName" : responseJson.userName,
         }
     } catch(err) {
         const errorName = getErrorName(err);

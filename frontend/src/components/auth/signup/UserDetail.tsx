@@ -3,28 +3,41 @@ import { Button } from "../../ui/button"
 import { InputField } from "../../ui/input"
 import { name_validation, password_repeat_validation, password_validation } from "../../../utils/inputValidations"
 import { sendUserInfo } from "../../../services/signup"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { AuthContext } from "../../../context/auth"
 
 export const UserDetails = ({email, controlSignal} : {email:string, controlSignal : AbortSignal}) => {
+
+    const auth = useContext(AuthContext);
+
+    if (!auth) {
+        throw new Error("check is authprovider provided");
+    }
+    
+    const { setUser } = auth;
 
     const methods = useForm();
     const [loading, setLoading] = useState(false);
     const onSubmit = methods.handleSubmit(data => {
     
-        async function handleButtonSubmit() {
-            const res = await sendUserInfo(data.username, email, data.password, controlSignal);
-            setLoading(false);
-            if(res.success) {
-                alert("User Created succesfully")
-            } else {
-                if(!res.abort) {
-                    alert(res.message);
-                } 
+    async function handleButtonSubmit() {
+        const res = await sendUserInfo(data.username, email, data.password, controlSignal);
+        setLoading(false);
+        if(res.success) {
+            setUser({
+                "email":res.email,
+                "userName":res.userName,
+            });
+        } else {
+            if(!res.abort) {
+                alert(res.message);
             } 
-        }
-        setLoading(true);
-        handleButtonSubmit();
-    })
+        } 
+    }
+    setLoading(true);
+    handleButtonSubmit();
+    });
+
     return <div className="w-full h-full p-4">
         <FormProvider {...methods}>
         <form

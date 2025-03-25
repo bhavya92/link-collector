@@ -219,7 +219,7 @@ export const loginUser = async (req: Request, res: Response) => {
     expires: new Date(Date.now() + 7 * 24 * 3600000),
   })
   .json({
-    message: "Signup Success",
+    message: "Login Success",
     email: user_exist_res!.email,
     userName : user_exist_res!.userName,
   });

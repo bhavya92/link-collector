@@ -19,6 +19,8 @@ export const loginUser = async (email:string, password:string,signal: AbortSigna
         return {
             "success" : response.status === 200,
             "message" : responseJson.message,
+            "email" : responseJson.email,
+            "userName" : responseJson.userName,
             "abort" : false
         };
     } catch(err){

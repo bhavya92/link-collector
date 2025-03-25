@@ -2,11 +2,20 @@ import { FormProvider, useForm } from "react-hook-form";
 import { CloseIcon } from "../../icons/close"
 import { Button } from "../ui/button"
 import { InputField } from "../ui/input"
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { email_validation, password_validation, userId_validation } from "../../utils/inputValidations";
 import { loginUser } from "../../services/login";
+import { AuthContext } from "../../context/auth";
 
 export const LoginModal = ({open, onClose, signal}) => {
+    const auth = useContext(AuthContext);
+
+    if (!auth) {
+        throw new Error("check is authprovider provided");
+      }
+    
+    const { setUser } = auth;
+
     const methods = useForm();
     const [loading, setLoading] = useState(false);
 
@@ -22,7 +31,8 @@ export const LoginModal = ({open, onClose, signal}) => {
             setLoading(false);
             if(res.success) {
                 methods.reset();
-                alert(res.message);
+                setUser({"userName" : res.userName, 
+                        "email":res.email });
             } else {
                 if(!res.abort) {
                     alert(res.message);

@@ -1,0 +1,62 @@
+import { BASE_URL, CREATE_CONTENT, FIND_TYPE } from "../constants/api"
+import { getErrorName } from "../utils/error";
+
+export const getType = async (link: string, signal: AbortSignal) => {
+    try {
+        const response = await fetch(`${BASE_URL}${FIND_TYPE}`,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json ; charset=UTF-8",
+            },
+            credentials:"include",
+            body: JSON.stringify({
+                link,
+            }),
+            signal,
+        });
+        const responseJson = await response.json();
+        return {
+            "success" : response.status === 200,
+            "messgae" : responseJson.message,
+            "data" : responseJson.type,
+            "abort" : false,
+        };
+    } catch(err) {
+        const errName = getErrorName(err);
+        if(errName === 'AbortError')
+            return {"success":false, "message":"Aborted","abort":true, "data" : null}    
+        console.log(err);
+        return {"success":false, "message":"Something went wrong","abort":false,"data":null}
+    }
+}
+
+export const createNewContent = async(link: string, title: string, tags: string[], type: string, signal: AbortSignal) => {
+    try {
+        const response = await fetch(`${BASE_URL}${CREATE_CONTENT}`,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json ; charset=UTF-8",
+            },
+            credentials:"include",
+            signal,
+            body:JSON.stringify({
+                link,
+                type,
+                title,
+                tags,
+            }),
+        });
+        const responseJson = await response.json();
+        return {
+            "success": response.status === 200,
+            "message": responseJson.message,
+            "data": responseJson.data
+        }
+    } catch(err) {
+        const errName = getErrorName(err);
+        if(errName === 'AbortError')
+            return {"success":false, "message":"Aborted","abort":true, "data" : null}    
+        console.log(err);
+        return {"success":false, "message":"Something went wrong","abort":false,"data":null}
+    }
+}

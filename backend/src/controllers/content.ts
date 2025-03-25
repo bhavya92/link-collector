@@ -10,6 +10,18 @@ import { DataNotFoundError } from "../utils/dataNotFound.js";
 export const findType = async (req: Request, res: Response) => {
     const link = req.body.link;
     const userId = (req as CustomRequest).userId;
+    appLogger.info(`${userId} hitted /findType for ${link}`);
+    //TODO: check if URL valid else return error
+    try {
+        new URL(link);
+      } catch (err) {
+        appLogger.warn(err);
+        res.status(400).json({
+            message:"Invalid URL",
+            type:"other"
+        });
+        return;
+      }
     const category = find_category(link);
     appLogger.info(`Category of ${link} is ${category} for ${userId}`);
     res.status(200).json({
@@ -32,17 +44,20 @@ export const newContent = async (req: Request, res: Response) => {
         if(err instanceof ZodError) {
             res.status(400).json({
                 message:err.format(),
+                data: null,
             })
             return;
         }
         if(err instanceof mongoose.Error.ValidationError){
             res.status(400).json({
                 message:err.message,
+                data:null,
             });
             return;
         }
         res.status(500).json({
             message:"Internal Server Error",
+            data:null,
         });
     }
 };

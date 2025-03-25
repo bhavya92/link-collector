@@ -4,14 +4,55 @@ import { PlusIcon } from "../../icons/plus"
 import { Button } from "../ui/button"
 import { InputField } from "../ui/input"
 import { Tag } from "../ui/tag"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useDebounce } from "../../hooks/debounce"
+import { createNewContent, getType } from "../../services/content"
 
 export const ContentModal = ( {showModal} ) => {
     const methods = useForm();
     const [tags, setTags] = useState<string[]>([]);
     const tagInputRef = useRef<HTMLInputElement>(null);
     const [ loading, setLoading ] = useState(false);
-    
+    const [ link, setLink ] = useState("");
+    const [linkType, setLinkType] = useState('video');
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    let debouncedLink  = useDebounce(link, 500);
+
+    function handleModalClose() {
+        controller.abort();
+        methods.reset();
+        setLink("");
+        setLinkType('video');
+        showModal(false);
+    }
+
+    function isValidUrl(url: string) {
+        try {
+          new URL(url.startsWith("http") ? url : `https://${url}`);
+          debouncedLink = url.startsWith("http") ? url : `https://${url}`;
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+
+    useEffect(() => {
+        async function handleFindLink() {
+            if(!isValidUrl(debouncedLink)) {
+                return;
+            }
+            const res = await getType(debouncedLink,signal);
+            if(res.success) {
+                setLinkType(res.data);           
+            } else {
+                console.log(res.message)
+            }
+        }
+         handleFindLink();
+    },[debouncedLink])
 
     function handleAddTags() {
         if(tagInputRef.current?.value === null || tagInputRef.current?.value === undefined) {
@@ -30,11 +71,18 @@ export const ContentModal = ( {showModal} ) => {
     }
     
     const onSubmit = methods.handleSubmit(data => {
-        console.log({data})
         async function handleSaveButton(){
-            
+            const res = await createNewContent(debouncedLink,data.title,tags,linkType,signal);
             setLoading(false);
-            
+            if(res.success) {
+                alert(res.message);
+                setLink("");
+                setLinkType('video');
+                methods.reset();
+                showModal(false);
+            } else {
+                alert(res.message);
+            }
         }
         setLoading(true);
         handleSaveButton();
@@ -48,23 +96,26 @@ export const ContentModal = ( {showModal} ) => {
         >
             <div className="w-70 mm:w-70 ml:w-80 ls:w-90 4k:w-130 h-fit flex flex-col p-4 rounded-sm bg-slate-50 border-slate-200 border-2 shadow-sm">
                 <div className="w-full h-fit flex justify-end">
-                    <div className="w-fit h-fit cursor-pointer" onClick={() => showModal(false)}><CloseIcon/></div>
+                    <div className="w-fit h-fit cursor-pointer" onClick={handleModalClose}><CloseIcon/></div>
                 </div>
                 <div className="flex flex-col w-full h-fit gap-y-2 mt-3">
                     <InputField validate={false} label="Title" id="title" inputType="text" hint="Title" />
-                    <InputField validate={false} label="Link" id="link" inputType="text" hint="Link" />
+                    <InputField value={link} onChange={(e) => setLink(e.target.value)} validate={false} label="Link" id="link" inputType="text" hint="Link" />
                 </div>
                 <div className="flex items-baseline w-fit h-fit mt-3">
                         <div className="flex w-fit items-baseline">
                         <label htmlFor="link_type" className="block mb-2 text-sm font-medium text-gray-900 w-32">Link Type</label>
                         <select id="link_type" className="col-start-1 row-start-1 bg-gray-50 border border-gray-300  
                                                         text-gray-900 text-xs rounded-lg focus:ring-blue-500 
-                                                        focus:border-blue-500 block w-full p-1 ml:text-sm">
-                            <option defaultValue={"VD"} value="VD">Video</option>
-                            <option value="AD">Audio</option>
-                            <option value="AR">Article</option>
-                            <option value="IM">Image</option>
-                            <option value="OT">Other</option>
+                                                        focus:border-blue-500 block w-full p-1 ml:text-sm"
+                                value={linkType}
+                                onChange={(e) => setLinkType(e.currentTarget.value)}>
+                            <option defaultValue={"video"} value="video">Video</option>
+                            <option value="audio">Audio</option>
+                            <option value="social">Social</option>
+                            <option value="article">Article</option>
+                            <option value="image">Image</option>
+                            <option value="other">Other</option>
                         </select>
                         </div>
                 </div>

@@ -87,6 +87,7 @@ export const domainCategoryMap : Record<string, string> = {
     "proton.me": "social",
     "icloud.com": "social",
     "open.spotify.com": "audio",
+    "spotify.com": "audio",
     "music.apple.com": "audio",
     "music.amazon.com": "audio",
     "music.youtube.com": "audio",

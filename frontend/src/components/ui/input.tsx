@@ -11,7 +11,8 @@ interface InputFieldProps {
     label: string;
     validation?: object;
     validate : boolean;
-    onChange? : () => void
+    value?:string;
+    onChange? : (e: React.ChangeEvent<HTMLInputElement >) => void
 }
 
 const defaultStyles = "text-xs ls:text-sm 4k:text-2xl px-3 py-2 w-full h-min rounded-sm border-2 border-royal-blue-400 text-slate-800 shadow-md focus:border-royal-blue-600 focus:outline-none bg-white";
@@ -36,13 +37,17 @@ export const InputField = (props : InputFieldProps) => {
       </AnimatePresence>
       <input   type={`${props.inputType}`} 
       id={`${props.id}`}
+      value={props.value}
       className={`${defaultStyles}`} 
       placeholder={`${props.hint ? props.hint : ''}`}
       {...register(props.id,props.validation)}
       /> 
   </div>: <input type={`${props.inputType}`} 
       id={`${props.id}`}
-      className={`${defaultStyles}`} 
+      className={`${defaultStyles}`}
+      value={props.value}
+      {...register(props.id)}
+      onChange={props.onChange}
       placeholder={`${props.hint ? props.hint : ''}`}/>}
   </>
 }

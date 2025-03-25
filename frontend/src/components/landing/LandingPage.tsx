@@ -47,6 +47,6 @@ export const LandingPage = () => {
                     <Button variant="secondary" text="Signup" onClick={openSignupModal}/>
             </div>
             <SingupModal open={signUpModalOpen} onClose={closeSignupModal} otpModal={showOtpBox} detailModal={showDetailForm} viewOtpModal={handleOtpModalView} viewDetailFormModal={handleDetailModalView} signal={signal}/>
-            <LoginModal open={loginModalOpen} onClose={closeLoginModal} />
+            <LoginModal open={loginModalOpen} onClose={closeLoginModal} signal={signal} />
     </div>
 }

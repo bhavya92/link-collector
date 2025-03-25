@@ -8,6 +8,7 @@ import {
   fetchImageContent,
   fetchOtherContent,
   fetchVideoContent,
+  findType,
   newContent,
 } from "../controllers/content.js";
 import { authenticated } from "../middlewares/authenticated.js";
@@ -31,4 +32,7 @@ contentRouter.post("/fetchOtherContent", authenticated, fetchOtherContent);
 contentRouter.post("/fetchDocContent", authenticated, fetchDocContent);
 
 contentRouter.post("/deleteContent",authenticated,deleteContent);
+
+contentRouter.post("/findType",authenticated,findType);
+
 export default contentRouter;

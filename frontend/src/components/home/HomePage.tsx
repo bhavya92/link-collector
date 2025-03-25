@@ -11,7 +11,8 @@ import { Button } from "../ui/button";
 import { UserDropDown } from "./userdropdown";
 import { AuthContext } from "../../context/auth";
 import { ContentModal } from "./NewContentModal";
-
+import { MegaphoneIcon } from "../../icons/megaphone";
+import { HomeIcon } from "../../icons/home";
 export const HomePage = () => {
     
     const auth = useContext(AuthContext);
@@ -37,8 +38,10 @@ export const HomePage = () => {
                     : null}
         <div className="fixed inset-y-0 left-0 z-50">
             <Sidebar expanded={expanded} setExpanded={toggleSidebar}>
+                <SidebarItem expanded={expanded} icon={<HomeIcon/>} title={"Home"}/>
                 <SidebarItem expanded={expanded} icon={<VideoIcon/>} title={"Video"} />
                 <SidebarItem expanded={expanded} icon={<AudioIcon/>} title={"Audio"} />
+                <SidebarItem expanded={expanded} icon={<MegaphoneIcon/>} title={"Social"}/>
                 <SidebarItem expanded={expanded} icon={<ArticleIcon/>} title={"Article"} />
                 <SidebarItem expanded={expanded} icon={<ImageIcon/>} title={"Image"} /> 
                 <SidebarItem expanded={expanded} icon={<TagIcon/>} title={"Tags"} />
@@ -58,6 +61,8 @@ export const HomePage = () => {
                 {newModal ? <div className="pl-8 h-full w-full flex items-center justify-center">
                     <ContentModal showModal={setNewModa}/>
                 </div> : null}
+
+
             </div>
         </div>
     </div> 

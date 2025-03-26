@@ -212,6 +212,7 @@ export const fetchOtherContent = async(req: Request, res: Response) => {
 };
 
 export const fetchSocialContent = async(req: Request, res: Response) => {
+    console.log("fetchSocialContent hitted")
     const userId = ((req as CustomRequest).userId).toString();
     try{
         const content = await fetch_content(userId,"social");

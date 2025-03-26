@@ -55,62 +55,54 @@ export const fetch_content = async(userId : string, type: string) => {
         }
         case "video": {
             content_data = await ContentModel.find({
-                userId: new mongoose.Types.ObjectId(userId)
-            },{
+                userId: new mongoose.Types.ObjectId(userId),
                 type:"video"
             }).lean();
             break;
         }
         case "audio": {
             content_data = await ContentModel.find({
-                userId: new mongoose.Types.ObjectId(userId)
-            },{
+                userId: new mongoose.Types.ObjectId(userId),
                 type:"audio"
             }).lean();
             break;
         }
         case "article": {
             content_data = await ContentModel.find({
-                userId: new mongoose.Types.ObjectId(userId)
-            },{
+                userId: new mongoose.Types.ObjectId(userId),
                 type:"article"
             }).lean();
             break;
         }
-        case "document": {
+        case "social": {
             content_data = await ContentModel.find({
-                userId: new mongoose.Types.ObjectId(userId)
-            },{
-                type:"document"
+                userId: new mongoose.Types.ObjectId(userId),
+                type:"social"
             }).lean();
             break;
         }
         case "image": {
             content_data = await ContentModel.find({
-                userId: new mongoose.Types.ObjectId(userId)
-            },{
+                userId: new mongoose.Types.ObjectId(userId),
                 type:"image"
             }).lean();
             break;
         }
         case "other": {
             content_data = await ContentModel.find({
-                userId: new mongoose.Types.ObjectId(userId)
-            },{
+                userId: new mongoose.Types.ObjectId(userId),
                 type:"other"
             }).lean();
             break;
         }
     }
    
-    
     if(content_data.length === 0)
         return [];
-
+ 
     const tagIds = [...new Set(content_data.flatMap(content => content.tags))];
     const tagTitles = await TagModel.find({ _id : { $in: tagIds} });
     const tagMap = Object.fromEntries(tagTitles.map(tag => [tag._id.toString(),tag.title]));
-
     const finalData = content_data.map(content => ({
         ...content,
         tags: content.tags.map(tagId => tagMap[tagId.toString()])

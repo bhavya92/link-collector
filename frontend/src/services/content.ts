@@ -75,9 +75,34 @@ export const createNewContent = async({link,title,tags,type,signal}:
     }
 }
 
-export const fetchAllContent = async() => {
+export const fetchContent = async({ queryKey }: { queryKey: [string, string] }) => {
+    const [, type] = queryKey;
+    let URL = '';
+    switch(type) {
+        case "all" : 
+            URL = `${BASE_URL}${FETCH_ALLCONTENT}`;
+            break;
+        case "video" : 
+            URL = `${BASE_URL}/content/fetchVideoContent`;
+            break;
+        case "audio":
+            URL = `${BASE_URL}/content/fetchAudioContent`;
+            break;
+        case "article":
+            URL = `${BASE_URL}/content/fetchArticleContent`;
+            break;
+        case "social":
+            URL = `${BASE_URL}/content/fetchSocialContent`;
+            break;
+        case "image":
+            URL = `${BASE_URL}/content/fetchImageContent`;
+            break;
+        case "other":
+            URL = `${BASE_URL}/content/fetchOtherContent`;
+            break;
+    }
     try {
-        const response = await fetch(`${BASE_URL}${FETCH_ALLCONTENT}`,{
+        const response = await fetch(`${URL}`,{
             method:"GET",
             headers:{
                 "Content-Type":"application/json ; charset=UTF-8",

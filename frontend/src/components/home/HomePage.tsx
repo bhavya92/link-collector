@@ -22,6 +22,7 @@ import { ArticleContent } from "./articlecontent";
 import { ImageContent } from "./imagecontent";
 import { SocialContent } from "./socialcontent";
 import { TagsContent } from "./tagscontent";
+import { OthersIcon } from "../../icons/other";
 export const HomePage = () => {
     
     const auth = useContext(AuthContext);
@@ -53,6 +54,7 @@ export const HomePage = () => {
                 <SidebarItem expanded={expanded} icon={<MegaphoneIcon/>} title={"Social"} onClick={() => navigate("/home/social")}/>
                 <SidebarItem expanded={expanded} icon={<ArticleIcon/>} title={"Article"} onClick={() => navigate("/home/article")}/>
                 <SidebarItem expanded={expanded} icon={<ImageIcon/>} title={"Image"} onClick={() => navigate("/home/image")}/> 
+                <SidebarItem expanded={expanded} icon={<OthersIcon/>} title={"Others"} onClick={() => navigate("/home/other")}/> 
                 <SidebarItem expanded={expanded} icon={<TagIcon/>} title={"Tags"} onClick={() => navigate("/home/tags")}/>
             </Sidebar>
         </div>
@@ -72,12 +74,13 @@ export const HomePage = () => {
                 </div> : null}
                 <div className="pl-16 pr-4 pt-2 w-full h-full">
                 <Routes>
-                    <Route path="/" element={<HomeContent />} />
-                    <Route path="video" element={<VideoContent />} />
-                    <Route path="audio" element={<AudioContent />} />
-                    <Route path="article" element={<ArticleContent />} />
-                    <Route path="image" element={<ImageContent />} />
-                    <Route path="social" element={<SocialContent />} />
+                    <Route path="/" element={<HomeContent type="all" />} />
+                    <Route path="video" element={<HomeContent type="video" />} />
+                    <Route path="audio" element={<HomeContent type="audio" />} />
+                    <Route path="article" element={<HomeContent type="article" />} />
+                    <Route path="image" element={<HomeContent type="image" />} />
+                    <Route path="social" element={<HomeContent type="social" />} />
+                    <Route path="other" element={<HomeContent type="other" />} />
                     <Route path="tags" element={<TagsContent/>} />
                     <Route path="*" element={<Navigate to="/home" />} />
                 </Routes>

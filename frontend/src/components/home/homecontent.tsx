@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { Content, deleteContent, fetchAllContent } from "../../services/content";
+import { Content, deleteContent, fetchContent } from "../../services/content";
 import { Card } from "../ui/card";
 
-export const HomeContent = () => {
+export const HomeContent = ({ type }: { type: string }) => {
 
     const queryClient = useQueryClient();
 
     const {data, error, isLoading } = useQuery<Content[]>({
-        queryKey:['contents'],
-        queryFn: fetchAllContent,
+        queryKey:['contents',type],
+        queryFn: ({ queryKey }) => fetchContent({ queryKey } as { queryKey: [string, string] }),
     });
 
     const deleteMutation = useMutation({

@@ -4,7 +4,6 @@ import { DeleteIcon } from "../../icons/delete"
 import { ImageIcon } from "../../icons/image"
 import { MegaphoneIcon } from "../../icons/megaphone"
 import { ShareIcon } from "../../icons/share"
-import { SummaryIcon } from "../../icons/summary"
 import { TagIcon } from "../../icons/tag"
 import { VideoIcon } from "../../icons/video"
 import { Tag } from "./tag"
@@ -63,7 +62,7 @@ export const Card = ({item, deleteItem}) => {
             <div className="flex-1 text-xs">
                 Added on : {item.createdAt ? getDate(item.createdAt) : "1/1/1"}
             </div>
-            <div className="w-fit h-fit"><SummaryIcon/></div>
+            <div className="w-fit h-fit">Summarize</div>
         </div>
     </div>
 }

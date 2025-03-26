@@ -29,7 +29,7 @@ contentRouter.get("/fetchArticleContent", authenticated, fetchArticleContent);
 
 contentRouter.get("/fetchOtherContent", authenticated, fetchOtherContent);
 
-contentRouter.post("/fetchSocialContent", authenticated, fetchSocialContent);
+contentRouter.get("/fetchSocialContent", authenticated, fetchSocialContent);
 
 contentRouter.post("/deleteContent",authenticated,deleteContent);
 

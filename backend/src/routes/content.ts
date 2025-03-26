@@ -4,9 +4,9 @@ import {
   fetchAllContent,
   fetchArticleContent,
   fetchAudioContent,
-  fetchDocContent,
   fetchImageContent,
   fetchOtherContent,
+  fetchSocialContent,
   fetchVideoContent,
   findType,
   newContent,
@@ -19,17 +19,17 @@ contentRouter.post("/newContent", authenticated, newContent);
 
 contentRouter.get("/fetchAllContent", authenticated, fetchAllContent);
 
-contentRouter.post("/fetchVideoContent", authenticated, fetchVideoContent);
+contentRouter.get("/fetchVideoContent", authenticated, fetchVideoContent);
 
-contentRouter.post("/fetchAudioContent", authenticated, fetchAudioContent);
+contentRouter.get("/fetchAudioContent", authenticated, fetchAudioContent);
 
-contentRouter.post("/fetchImageContent", authenticated, fetchImageContent);
+contentRouter.get("/fetchImageContent", authenticated, fetchImageContent);
 
-contentRouter.post("/fetchArticleContent", authenticated, fetchArticleContent);
+contentRouter.get("/fetchArticleContent", authenticated, fetchArticleContent);
 
-contentRouter.post("/fetchOtherContent", authenticated, fetchOtherContent);
+contentRouter.get("/fetchOtherContent", authenticated, fetchOtherContent);
 
-contentRouter.post("/fetchDocContent", authenticated, fetchDocContent);
+contentRouter.post("/fetchSocialContent", authenticated, fetchSocialContent);
 
 contentRouter.post("/deleteContent",authenticated,deleteContent);
 

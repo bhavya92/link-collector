@@ -211,10 +211,10 @@ export const fetchOtherContent = async(req: Request, res: Response) => {
     } 
 };
 
-export const fetchDocContent = async(req: Request, res: Response) => {
+export const fetchSocialContent = async(req: Request, res: Response) => {
     const userId = ((req as CustomRequest).userId).toString();
     try{
-        const content = await fetch_content(userId,"document");
+        const content = await fetch_content(userId,"social");
         res.status(200).json({
             message:'Contents Fetched',
             content:content,

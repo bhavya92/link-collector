@@ -17,7 +17,7 @@ const contentRouter = Router();
 
 contentRouter.post("/newContent", authenticated, newContent);
 
-contentRouter.post("/fetchAllContent", authenticated, fetchAllContent);
+contentRouter.get("/fetchAllContent", authenticated, fetchAllContent);
 
 contentRouter.post("/fetchVideoContent", authenticated, fetchVideoContent);
 

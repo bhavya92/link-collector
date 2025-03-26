@@ -12,3 +12,5 @@ export const VALIDATE_TOKEN = "/user/validate-token";
 
 export const FIND_TYPE = "/content/findType";
 export const CREATE_CONTENT = "/content/newContent";
+export const FETCH_ALLCONTENT = "/content/fetchAllContent"
+export const DELETE_CONTENT = "/content/deleteContent"

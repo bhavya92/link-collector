@@ -7,6 +7,6 @@ const schema = new Schema({
     title: { type: String, required: true },
     tags : [{ type: Types.ObjectId, ref: 'tags' }],
     userId : { type : Types.ObjectId, ref: 'users', required: true },
-});
+},{ timestamps: true });
 
 export const ContentModel = model('content', schema);

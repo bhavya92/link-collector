@@ -42,7 +42,7 @@ export const HomePage = () => {
         setShowUser(prev => !prev);
     }
 
-    return<div className="w-screen h-screen relative">
+    return<div className="w-screen h-screen overflow-hidden relative">
         {expanded ? <div className="bg-slate-100/50 z-50 absolute inset-0" onClick={toggleSidebar}></div> 
                     : null}
         <div className="fixed inset-y-0 left-0 z-50">
@@ -63,14 +63,14 @@ export const HomePage = () => {
                     <ProfileIcon/>
                 </div>
             </div>
-            <div className="relative w-full flex-1 ">
+            <div className="relative max-w-screen flex-1 max-h-screen ">
                 <div className="absolute top-2 right-4">
                     <UserDropDown isShown={showUser} email={user?.email} username={user?.userName} setUser={setUser}/>
                 </div>
-                {newModal ? <div className="pl-8 h-full w-full flex items-center justify-center">
+                {newModal ? <div className="absolute top-0 right-0 pl-8 h-full w-full flex items-center justify-center z-40 bg-slate-100/50">
                     <ContentModal showModal={setNewModa}/>
                 </div> : null}
-                <div className="pl-16">
+                <div className="pl-16 pr-4 pt-2 w-full h-full">
                 <Routes>
                     <Route path="/" element={<HomeContent />} />
                     <Route path="video" element={<VideoContent />} />

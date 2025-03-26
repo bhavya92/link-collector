@@ -1,5 +1,14 @@
-import { BASE_URL, CREATE_CONTENT, FIND_TYPE } from "../constants/api"
+import { BASE_URL, CREATE_CONTENT, DELETE_CONTENT, FETCH_ALLCONTENT, FIND_TYPE } from "../constants/api"
 import { getErrorName } from "../utils/error";
+
+export interface Content {
+    _id: string;
+    link: string;
+    type: string;
+    title: string;
+    tags : string[];
+    createdAt : string;
+}
 
 export const getType = async (link: string, signal: AbortSignal) => {
     try {
@@ -30,7 +39,12 @@ export const getType = async (link: string, signal: AbortSignal) => {
     }
 }
 
-export const createNewContent = async(link: string, title: string, tags: string[], type: string, signal: AbortSignal) => {
+export const createNewContent = async({link,title,tags,type,signal}:
+                {link: string; 
+                title: string; 
+                tags: string[]; 
+                type: string; 
+                signal: AbortSignal}) => {
     try {
         const response = await fetch(`${BASE_URL}${CREATE_CONTENT}`,{
             method:"POST",
@@ -58,5 +72,41 @@ export const createNewContent = async(link: string, title: string, tags: string[
             return {"success":false, "message":"Aborted","abort":true, "data" : null}    
         console.log(err);
         return {"success":false, "message":"Something went wrong","abort":false,"data":null}
+    }
+}
+
+export const fetchAllContent = async() => {
+    try {
+        const response = await fetch(`${BASE_URL}${FETCH_ALLCONTENT}`,{
+            method:"GET",
+            headers:{
+                "Content-Type":"application/json ; charset=UTF-8",
+            },
+            credentials:"include",
+        });
+        const responseJson = await response.json();
+        console.log(responseJson.content);
+        return responseJson.content;
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+export const deleteContent = async(id: string) => {
+    try {
+        const response = await fetch(`${BASE_URL}${DELETE_CONTENT}`,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json ; charset=UTF-8",
+            },
+            credentials:"include",
+            body:JSON.stringify({
+                contentId: id,
+            })
+        });
+        const responseJson = await response.json();
+        return responseJson.content;
+    } catch(err) {
+        console.log(err);
     }
 }

@@ -114,6 +114,7 @@ export const deleteContent = async (req: Request, res: Response) => {
 };
 
 export const fetchAllContent = async (req: Request, res: Response) => {
+    console.log("fetchAllHitted");
     const userId = ((req as CustomRequest).userId).toString();
     try{
         const content = await fetch_content(userId,"all");

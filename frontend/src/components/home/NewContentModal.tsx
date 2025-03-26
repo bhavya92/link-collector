@@ -7,14 +7,29 @@ import { Tag } from "../ui/tag"
 import { useEffect, useRef, useState } from "react"
 import { useDebounce } from "../../hooks/debounce"
 import { createNewContent, getType } from "../../services/content"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export const ContentModal = ( {showModal} ) => {
     const methods = useForm();
     const [tags, setTags] = useState<string[]>([]);
     const tagInputRef = useRef<HTMLInputElement>(null);
-    const [ loading, setLoading ] = useState(false);
     const [ link, setLink ] = useState("");
     const [linkType, setLinkType] = useState('video');
+
+    const queryClient = useQueryClient();
+    const addMutation = useMutation({
+        mutationFn: createNewContent,
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey:['contents']});
+            setLink("");
+            setLinkType('video');
+            methods.reset();
+            showModal(false);
+        },
+        onError: () => {
+            alert("something went wrong");
+        }
+    });
 
     const controller = new AbortController();
     const signal = controller.signal;
@@ -72,19 +87,14 @@ export const ContentModal = ( {showModal} ) => {
     
     const onSubmit = methods.handleSubmit(data => {
         async function handleSaveButton(){
-            const res = await createNewContent(debouncedLink,data.title,tags,linkType,signal);
-            setLoading(false);
-            if(res.success) {
-                alert(res.message);
-                setLink("");
-                setLinkType('video');
-                methods.reset();
-                showModal(false);
-            } else {
-                alert(res.message);
-            }
+            addMutation.mutate({
+                link: debouncedLink,
+                title: data.title,
+                tags: tags,
+                type: linkType,
+                signal: signal
+            });
         }
-        setLoading(true);
         handleSaveButton();
     });
 
@@ -133,7 +143,7 @@ export const ContentModal = ( {showModal} ) => {
                     </div>
                 </div>
                 <div className="flex flex-col w-full h-full items-center justify-end">
-                    <Button text="Save" loading={loading} wfull={true} variant="primary" onClick={onSubmit}/>
+                    <Button text="Save" loading={addMutation.isPending} wfull={true} variant="primary" onClick={onSubmit}/>
                 </div>
             </div>
         </form>

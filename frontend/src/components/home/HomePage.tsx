@@ -15,7 +15,7 @@ import { MegaphoneIcon } from "../../icons/megaphone";
 import { HomeIcon } from "../../icons/home";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { LandingPage } from "../landing/LandingPage";
-import { HomeContent } from "./homecontent";
+import { DisplayContent } from "./displaycontent";
 import { VideoContent } from "./videocontent";
 import { AudioContent } from "./audiocontent";
 import { ArticleContent } from "./articlecontent";
@@ -69,18 +69,18 @@ export const HomePage = () => {
                 <div className="absolute top-2 right-4">
                     <UserDropDown isShown={showUser} email={user?.email} username={user?.userName} setUser={setUser}/>
                 </div>
-                {newModal ? <div className="absolute top-0 right-0 pl-8 h-full w-full flex items-center justify-center z-40 bg-slate-100/50">
+                {newModal ? <div className="absolute top-0 right-0 pl-8 h-full w-full flex items-center justify-center z-40">
                     <ContentModal showModal={setNewModa}/>
                 </div> : null}
                 <div className="pl-16 pr-4 pt-2 w-full h-full">
                 <Routes>
-                    <Route path="/" element={<HomeContent type="all" />} />
-                    <Route path="video" element={<HomeContent type="video" />} />
-                    <Route path="audio" element={<HomeContent type="audio" />} />
-                    <Route path="article" element={<HomeContent type="article" />} />
-                    <Route path="image" element={<HomeContent type="image" />} />
-                    <Route path="social" element={<HomeContent type="social" />} />
-                    <Route path="other" element={<HomeContent type="other" />} />
+                    <Route path="/" element={<DisplayContent type="all" />} />
+                    <Route path="video" element={<DisplayContent type="video" />} />
+                    <Route path="audio" element={<DisplayContent type="audio" />} />
+                    <Route path="article" element={<DisplayContent type="article" />} />
+                    <Route path="image" element={<DisplayContent type="image" />} />
+                    <Route path="social" element={<DisplayContent type="social" />} />
+                    <Route path="other" element={<DisplayContent type="other" />} />
                     <Route path="tags" element={<TagsContent/>} />
                     <Route path="*" element={<Navigate to="/home" />} />
                 </Routes>

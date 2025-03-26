@@ -104,7 +104,7 @@ export const ContentModal = ( {showModal} ) => {
         onSubmit={e => e.preventDefault()}
         noValidate
         >
-            <div className="w-70 mm:w-70 ml:w-80 ls:w-90 4k:w-130 h-fit flex flex-col p-4 rounded-sm bg-slate-50 border-slate-200 border-2 shadow-sm">
+            <div className="w-70 mm:w-70 ml:w-80 ls:w-90 4k:w-130 h-fit flex flex-col p-4 rounded-sm bg-slate-50 border-slate-200 border-2 shadow-lg">
                 <div className="w-full h-fit flex justify-end">
                     <div className="w-fit h-fit cursor-pointer" onClick={handleModalClose}><CloseIcon/></div>
                 </div>

@@ -23,4 +23,6 @@
 --breakpoint-ls: 64rem;
 --breakpoint-ll: 90rem;
 --breakpoint-4k: 160rem; 
+
+--text-tiny: 0.625rem;
 }

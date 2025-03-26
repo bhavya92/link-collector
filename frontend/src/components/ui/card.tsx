@@ -37,10 +37,10 @@ export const Card = ({item, deleteItem}) => {
         return `${day}/${month}/${year}`
     }
 
-    return <div className="flex-flex-col w-80 h-fit rounded-sm shadow-md border-2 px-3 pt-3 pb-2 border-slate-200">
+    return <div className="flex-flex-col w-full h-fit rounded-sm shadow-md border-2 px-3 pt-3 pb-2 border-slate-200">
         <div className="flex items-center">
             {getIcon(item.type)}
-            <div className="flex-1 ml-2">
+            <div className="flex-1 ml-2 mr-1">
                 {item.title}
             </div>
             <div className="flex gap-x-3">
@@ -53,16 +53,16 @@ export const Card = ({item, deleteItem}) => {
                 </div>
             </div>
         </div>
-        <div className="flex flex-wrap gap-x-1 mx-0 mt-4 h-fit">
-            {item.tags.map( (sub) => (
-                <Tag tagName={sub} deleteTag={null}/>
+        <div className="flex flex-wrap gap-1 mx-0 mt-4 h-fit">
+            {item.tags.map( (sub,index) => (
+                <Tag key={index} tagName={sub} deleteTag={null}/>
             ))}
         </div>
         <div className="flex mt-2 items-center">
             <div className="flex-1 text-xs">
                 Added on : {item.createdAt ? getDate(item.createdAt) : "1/1/1"}
             </div>
-            <div className="w-fit h-fit">Summarize</div>
+            {/* <div className="w-fit h-fit text-tiny border rounded-lg py-0.5 px-1">Summarize</div> */}
         </div>
     </div>
 }

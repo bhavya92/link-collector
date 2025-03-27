@@ -37,7 +37,7 @@ export const Card = ({item, deleteItem}) => {
         return `${day}/${month}/${year}`
     }
 
-    return <div className="flex-flex-col w-full h-fit rounded-sm shadow-md border-2 px-3 pt-3 pb-2 border-slate-200">
+    return <div className="flex-flex-col w-full h-fit rounded-xl shadow-xs border-2 px-3 pt-3 pb-2 border-slate-200 bg-slate-50">
         <div className="flex items-center">
             {getIcon(item.type)}
             <div className="flex-1 ml-2 mr-1">

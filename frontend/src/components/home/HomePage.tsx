@@ -33,6 +33,10 @@ export const HomePage = () => {
         setExpanded( prev => !prev);
     }
 
+    function closeSideBar() {
+        setExpanded(false);
+    }
+
     function toggleuserDropDown() {
         setShowUser(prev => !prev);
     }
@@ -42,14 +46,14 @@ export const HomePage = () => {
                     : null}
         <div className="fixed inset-y-0 left-0 z-50">
             <Sidebar expanded={expanded} setExpanded={toggleSidebar}>
-                <SidebarItem expanded={expanded} icon={<HomeIcon/>} title={"Home"} onClick={() => navigate("/home")}/>
-                <SidebarItem expanded={expanded} icon={<VideoIcon/>} title={"Video"} onClick={() => navigate("/home/video")}/>
-                <SidebarItem expanded={expanded} icon={<AudioIcon/>} title={"Audio"} onClick={() => navigate("/home/audio")}/>
-                <SidebarItem expanded={expanded} icon={<MegaphoneIcon/>} title={"Social"} onClick={() => navigate("/home/social")}/>
-                <SidebarItem expanded={expanded} icon={<ArticleIcon/>} title={"Article"} onClick={() => navigate("/home/article")}/>
-                <SidebarItem expanded={expanded} icon={<ImageIcon/>} title={"Image"} onClick={() => navigate("/home/image")}/> 
-                <SidebarItem expanded={expanded} icon={<OthersIcon/>} title={"Others"} onClick={() => navigate("/home/other")}/> 
-                <SidebarItem expanded={expanded} icon={<TagIcon/>} title={"Tags"} onClick={() => navigate("/home/tags")}/>
+                <SidebarItem expanded={expanded} icon={<HomeIcon/>} title={"Home"} onClick={() => {navigate("/home"); closeSideBar()}}/>
+                <SidebarItem expanded={expanded} icon={<VideoIcon/>} title={"Video"} onClick={() =>{ navigate("/home/video"); closeSideBar()}}/>
+                <SidebarItem expanded={expanded} icon={<AudioIcon/>} title={"Audio"} onClick={() =>{ navigate("/home/audio"); closeSideBar();}}/>
+                <SidebarItem expanded={expanded} icon={<MegaphoneIcon/>} title={"Social"} onClick={() =>{ navigate("/home/social"); closeSideBar();}}/>
+                <SidebarItem expanded={expanded} icon={<ArticleIcon/>} title={"Article"} onClick={() =>{ navigate("/home/article"); closeSideBar();}}/>
+                <SidebarItem expanded={expanded} icon={<ImageIcon/>} title={"Image"} onClick={() =>{ navigate("/home/image"); closeSideBar();}}/> 
+                <SidebarItem expanded={expanded} icon={<OthersIcon/>} title={"Others"} onClick={() =>{ navigate("/home/other"); closeSideBar();}}/> 
+                <SidebarItem expanded={expanded} icon={<TagIcon/>} title={"Tags"} onClick={() =>{ navigate("/home/tags"); closeSideBar();}}/>
             </Sidebar>
         </div>
         <div className="w-full h-full flex flex-col z-10">

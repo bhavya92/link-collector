@@ -153,3 +153,22 @@ export const fetch_tags = async(userId: string) => {
     console.log(tagTitles);
     return tagTitles;
 }
+
+export const fetch_tag_content = async(tagId: string, userId: string) => {
+    const content = await ContentModel.find({
+        userId : new mongoose.Types.ObjectId(userId),
+        tags : new mongoose.Types.ObjectId(tagId),
+    }).lean();
+
+    if(content.length === 0)
+        return [];
+ 
+    const tagIds = [...new Set(content.flatMap(content => content.tags))];
+    const tagTitles = await TagModel.find({ _id : { $in: tagIds} });
+    const tagMap = Object.fromEntries(tagTitles.map(tag => [tag._id.toString(),tag.title]));
+    const finalData = content.map(content => ({
+        ...content,
+        tags: content.tags.map(tagId => tagMap[tagId.toString()])
+    }));
+    return finalData;
+}

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { create_content, delete_content, fetch_content, fetch_tags, find_category, update_content } from "../services/content.js";
+import { create_content, delete_content, fetch_content, fetch_tag_content, fetch_tags, find_category, update_content } from "../services/content.js";
 import { appLogger } from "../utils/logger.js";
 import { CustomRequest } from "../middlewares/authenticated.js";
 import { ZodError } from "zod";
@@ -238,6 +238,23 @@ export const fetchTags = async(req: Request, res: Response) => {
             data: data,
         });
     } catch(err){
+        appLogger.error(`Error ${err} for ${userId}`);
+        res.status(500).json({
+            message:"Internal Server Error",
+        });
+    }
+}
+
+export const fetchTagContent = async(req: Request, res: Response) => {
+    const tagId = req.body.tagId;
+    const userId = ((req as CustomRequest).userId).toString();
+    try {
+        const data = await fetch_tag_content(tagId, userId);
+        res.status(200).json({
+            message:"Contents fetched",
+            content: data,
+        });
+    } catch(err) {
         appLogger.error(`Error ${err} for ${userId}`);
         res.status(500).json({
             message:"Internal Server Error",

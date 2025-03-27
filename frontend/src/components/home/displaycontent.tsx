@@ -6,7 +6,7 @@ export const DisplayContent = ({ type }: { type: string }) => {
 
     const queryClient = useQueryClient();
 
-    const {data, error, isLoading, isSuccess } = useQuery<Content[]>({
+    const {data, error, isLoading } = useQuery<Content[]>({
         queryKey:['contents',type],
         queryFn: ({ queryKey }) => fetchContent({ queryKey } as { queryKey: [string, string] }),
     });
@@ -28,7 +28,7 @@ export const DisplayContent = ({ type }: { type: string }) => {
         {Array.isArray(data) && data?.length > 0 && data !== undefined ? 
         <div className="columns-1 tb:columns-2 ls:columns-4 ll:columns-6 4k:columns-5 gap-4 pb-20">
             {data?.map((item) => (
-                <div className="mb-4 w-full break-inside-avoid">
+                <div key={item._id} className="mb-4 w-full break-inside-avoid">
                     <Card key={item._id} item= {item} deleteItem={deleteItem}/>
                 </div>
             ))}

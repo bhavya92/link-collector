@@ -20,7 +20,9 @@ export const ContentModal = ( {showModal} ) => {
     const addMutation = useMutation({
         mutationFn: createNewContent,
         onSuccess: () => {
-            queryClient.invalidateQueries({queryKey:['contents']});
+            queryClient.invalidateQueries({ queryKey: ['contents'] });
+            queryClient.invalidateQueries({ queryKey: ['tagContents'] });
+            queryClient.invalidateQueries({ queryKey: ['tags'] });
             setLink("");
             setLinkType('video');
             methods.reset();

@@ -14,13 +14,7 @@ import { ContentModal } from "./NewContentModal";
 import { MegaphoneIcon } from "../../icons/megaphone";
 import { HomeIcon } from "../../icons/home";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
-import { LandingPage } from "../landing/LandingPage";
 import { DisplayContent } from "./displaycontent";
-import { VideoContent } from "./videocontent";
-import { AudioContent } from "./audiocontent";
-import { ArticleContent } from "./articlecontent";
-import { ImageContent } from "./imagecontent";
-import { SocialContent } from "./socialcontent";
 import { TagsContent } from "./tagscontent";
 import { OthersIcon } from "../../icons/other";
 export const HomePage = () => {

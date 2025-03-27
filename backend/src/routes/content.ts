@@ -7,6 +7,7 @@ import {
   fetchImageContent,
   fetchOtherContent,
   fetchSocialContent,
+  fetchTags,
   fetchVideoContent,
   findType,
   newContent,
@@ -34,5 +35,7 @@ contentRouter.get("/fetchSocialContent", authenticated, fetchSocialContent);
 contentRouter.post("/deleteContent",authenticated,deleteContent);
 
 contentRouter.post("/findType",authenticated,findType);
+
+contentRouter.get("/getAllTags",authenticated,fetchTags);
 
 export default contentRouter;

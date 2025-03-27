@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { create_content, delete_content, fetch_content, find_category, update_content } from "../services/content.js";
+import { create_content, delete_content, fetch_content, fetch_tags, find_category, update_content } from "../services/content.js";
 import { appLogger } from "../utils/logger.js";
 import { CustomRequest } from "../middlewares/authenticated.js";
 import { ZodError } from "zod";
@@ -227,3 +227,20 @@ export const fetchSocialContent = async(req: Request, res: Response) => {
         });
     } 
 };
+
+export const fetchTags = async(req: Request, res: Response) => {
+    console.log("Inside fetchTags");
+    const userId = ((req as CustomRequest).userId).toString();
+    try{
+        const data = await fetch_tags(userId);
+        res.status(200).json({
+            message:"Tags fetched",
+            data: data,
+        });
+    } catch(err){
+        appLogger.error(`Error ${err} for ${userId}`);
+        res.status(500).json({
+            message:"Internal Server Error",
+        });
+    }
+}

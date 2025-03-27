@@ -43,8 +43,7 @@ export const create_content = async(data: ContentInput, userId: string) => {
 }
 
 export const fetch_content = async(userId : string, type: string) => {
-    // fetch all content of userId,
-    // then when got the tagIds, fetch all names of tags 
+
     let content_data;
     switch(type) {
         case "all" : {
@@ -143,4 +142,14 @@ export const update_content = async(contentId : string, updateData: I_updateCont
         throw new DataNotFoundError(`Content not found`);
     }
     return updateData;
+}
+
+export const fetch_tags = async(userId: string) => {
+    const content_data =  await ContentModel.find({
+                            userId : new mongoose.Types.ObjectId(userId)
+                        }).lean();
+    const tagIds = [...new Set(content_data.flatMap(content => content.tags))];
+    const tagTitles = await TagModel.find({ _id : { $in: tagIds} });
+    console.log(tagTitles);
+    return tagTitles;
 }

@@ -22,12 +22,6 @@ export const DisplayContent = ({ type }: { type: string }) => {
         deleteMutation.mutate(id);
     }
 
-    // if(isSuccess) {
-    //     const fc = data.filter((_,index) => index%3 == 0);
-    //     const fc = data.filter((_,index) => index%3 == 0);
-    //     const fc = data.filter((_,index) => index%3 == 0);
-    // }
-
     if(isLoading) return <h1>Loading bitch...</h1>
     if(error) return <h1>Error</h1>
     return <div className="w-full h-full overflow-y-auto flex flex-col">

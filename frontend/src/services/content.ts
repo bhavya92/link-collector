@@ -10,6 +10,11 @@ export interface Content {
     createdAt : string;
 }
 
+export interface Tags {
+    _id: string;
+    title: string;
+}
+
 export const getType = async (link: string, signal: AbortSignal) => {
     try {
         const response = await fetch(`${BASE_URL}${FIND_TYPE}`,{
@@ -130,6 +135,44 @@ export const deleteContent = async(id: string) => {
             })
         });
         const responseJson = await response.json();
+        return responseJson.content;
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+export const getTags = async() => {
+    try{
+        const response = await fetch(`${BASE_URL}/content/getAllTags`,{
+            method:"GET",
+            headers:{
+                "Content-Type":"application/json ; charset=UTF-8",
+            },
+            credentials:"include",
+        });
+        const responseJson = await response.json();
+        return responseJson.data;
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+export const getTagContent = async({ queryKey }: { queryKey: [string, string] }) => {
+    const [, tagId] = queryKey;
+    console.log(`tagId in service ${tagId}`);
+    try {
+        const response = await fetch(`${BASE_URL}/content/getTagContent`,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json ; charset=UTF-8",
+            },
+            credentials:"include",
+            body: JSON.stringify({
+                tagId,
+            }),
+        });
+        const responseJson = await response.json();
+        console.log(responseJson)
         return responseJson.content;
     } catch(err) {
         console.log(err);

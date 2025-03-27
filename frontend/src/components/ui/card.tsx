@@ -47,10 +47,10 @@ export const Card = ({item, deleteItem}) => {
                 <div className="w-fit h-fit cursor-pointer">
                     <ShareIcon/>
                 </div>
-                <div className="w-fit h-fit cursor-pointer"
+                {deleteItem ? <div className="w-fit h-fit cursor-pointer"
                     onClick={() => deleteItem(item._id)}>
                     <DeleteIcon/>
-                </div>
+                </div>  :null}
             </div>
         </div>
         <div className="flex flex-wrap gap-1 mx-0 mt-4 h-fit">

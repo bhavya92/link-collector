@@ -96,8 +96,11 @@ export const Card = ({item, deleteItem}) => {
 
     function handleShareClick() {
         navigator.clipboard.writeText(item.link);
-        alert("Link copied to Clipboard");
+        customAlert!.setMessage("Link Copied");
+        customAlert!.setVariant("info");
+        customAlert!.setShowAlert(true)
     }
+
     return <div className="flex-flex-col w-full h-fit rounded-xl shadow-xs border-2 p-2 border-slate-200 bg-slate-50">
         <div className="flex items-center">
             <div className="w-fit h-fit">{getIcon(item.type)}</div>

@@ -3,13 +3,14 @@ import { AlertContext } from "../../context/alert";
 import { CloseIcon } from "../../icons/close";
 
 interface AlertProps {
-    variant : "success" | "error" | null;
+    variant : "success" | "error" | "info" | null;
     message : string | null;
 }
 
 const alertVaraints = {
     "success" : "bg-green-400",
     "error" : "bg-red-400",
+    "info" : "bg-royal-blue-600"
 }
 
 const defaultStyles = "absolute bottom-2 right-2 z-50 w-40 text-tiny tb:w-80 tb:text-sm font-medium flex items-center justify-between py-2 px-4 text-white";

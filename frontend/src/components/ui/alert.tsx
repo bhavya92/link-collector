@@ -12,7 +12,7 @@ const alertVaraints = {
     "error" : "bg-red-400",
 }
 
-const defaultStyles = "absolute bottom-2 right-2 z-50 w-80 text-sm font-medium flex items-center justify-between py-2 px-4 text-white";
+const defaultStyles = "absolute bottom-2 right-2 z-50 w-40 text-tiny tb:w-80 tb:text-sm font-medium flex items-center justify-between py-2 px-4 text-white";
 
 export const Alert = (props: AlertProps) => {
     const customAlert = useContext(AlertContext);

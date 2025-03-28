@@ -35,7 +35,7 @@ export const TagsContent = () => {
                 </div>
             ))}
         </div>
-        <div className="w-full tb:w-fit h-fit tb:h-full my-2 border border-slate-300"/>
+        <div className="w-full tb:w-fit h-fit tb:h-full my-2 tb:ml-4 border border-slate-300"/>
         <div className="flex-1 h-full tb:pl-6 tb:overflow-y-auto flex flex-col">
             {contentQuery.error ? <div>Error fetching data</div> : null}
             {contentQuery.data !== undefined && contentQuery.data?.length > 0 ? 

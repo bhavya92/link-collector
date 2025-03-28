@@ -10,11 +10,13 @@ import { VideoIcon } from "../../icons/video"
 import { Tag } from "./tag"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { updateContent } from "../../services/content"
+import { PlusIcon } from "../../icons/plus"
 
 export const Card = ({item, deleteItem}) => {
     
     const [updatedTitle, setUpdatedTitle] = useState(item.title);
     const [tagsArray, setTagsArray] = useState(item.tags)
+    const tagInputRef = useRef<HTMLInputElement>(null);
 
     const queryClient = useQueryClient();
     const contentMutation = useMutation({
@@ -66,6 +68,19 @@ export const Card = ({item, deleteItem}) => {
         contentMutation.mutate({"contentId":item._id,"newTags":tagsArray,"title":updatedTitle })
     }
 
+    function handleAddTags() {
+        if(tagInputRef.current?.value === null || tagInputRef.current?.value === undefined) {
+            return;
+        }
+        if(tagInputRef.current?.value.trim() !== '') {
+            setTagsArray( [...item.tags, tagInputRef.current.value]);
+            tagInputRef.current.value='';
+            handleBlurEvent();
+        } else {
+            return;
+        }
+    }
+
     return <div className="flex-flex-col w-full h-fit rounded-xl shadow-xs border-2 p-2 border-slate-200 bg-slate-50">
         <div className="flex items-center">
             <div className="w-fit h-fit">{getIcon(item.type)}</div>
@@ -87,12 +102,17 @@ export const Card = ({item, deleteItem}) => {
         
         </div>
   
-        <div className="flex flex-wrap gap-1 mx-0 mt-4 h-fit">
+        <div className="flex flex-wrap gap-1 mx-0 mt-4 h-fit items-center">
             {tagsArray.map( (sub,index) => (
                 <Tag key={index} tagName={sub} deleteTag={removeTag}/>
             ))}
+            <div className="flex justify-between items-center w-16 border border-slate-300 pl-1 pr-0 py-0.5 rounded-xl hover:border-slate-400 focus-within:border-slate-400">
+                <input ref={tagInputRef} placeholder="tag" className="mr-1 w-10 flex-1 border-none focus:border-none focus:outline-none text-xs "></input>
+            <div className="w-fit h-fit hover:scale-110 cursor-pointer rounded-full bg-slate-200 " onClick={handleAddTags}><PlusIcon size="xs"/></div>
         </div>
-        <div className="flex mt-2 items-center">
+        </div>
+        
+        <div className="flex mt-3 items-center">
             <div className="flex-1 text-xs">
                 Added on : {item.createdAt ? getDate(item.createdAt) : "1/1/1"}
             </div>

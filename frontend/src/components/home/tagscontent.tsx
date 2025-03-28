@@ -30,7 +30,7 @@ export const TagsContent = () => {
             {tagQuery.isLoading ? <div>Fetching tags</div> : null}
             {tagQuery.error ? <div>Error fetching data</div> : null}
             {tagQuery.data?.map((item) => (
-                <div className="w-fit h-fit cursor-pointer" key={item._id}>
+                <div className={`w-fit h-fit cursor-pointer ${tagId==item._id ? 'bg-slate-200' : ''} rounded-xl`} key={item._id}>
                     <Tag key={item._id} tagName={item.title} deleteTag={null} id={item._id} setTagId={setTagId}/>
                 </div>
             ))}

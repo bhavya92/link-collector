@@ -81,6 +81,10 @@ export const Card = ({item, deleteItem}) => {
         }
     }
 
+    function handleShareClick() {
+        navigator.clipboard.writeText(item.link);
+        alert("Link copied to Clipboard");
+    }
     return <div className="flex-flex-col w-full h-fit rounded-xl shadow-xs border-2 p-2 border-slate-200 bg-slate-50">
         <div className="flex items-center">
             <div className="w-fit h-fit">{getIcon(item.type)}</div>
@@ -91,7 +95,7 @@ export const Card = ({item, deleteItem}) => {
                     className="text-sm w-full h-full ml-2 p-1 overflow-ellipsis focus:outline-slate-600"/>
             
             <div className="flex gap-x-2 w-auto h-full ml-1">
-                <div className="w-fit h-fit cursor-pointer">
+                <div className="w-fit h-fit cursor-pointer" onClick={handleShareClick}>
                     <ShareIcon/>
                 </div>
                 {deleteItem ? <div className="w-fit h-fit cursor-pointer"

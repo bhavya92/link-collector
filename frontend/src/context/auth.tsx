@@ -45,7 +45,11 @@ const AuthProvider = ({children}) => {
                 setLoading(false);
             }
         }
-        validateToken();
+        setTimeout(() => {
+           validateToken();
+          }, 3000);
+        
+        //validateToken();
     },[]);
 
     return <AuthContext.Provider value={{user, setUser, loading}}>{children}</AuthContext.Provider>

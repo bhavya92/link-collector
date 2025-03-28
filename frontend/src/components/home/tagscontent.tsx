@@ -5,7 +5,6 @@ import { Card } from "../ui/card";
 import { useEffect, useState } from "react";
 
 export const TagsContent = () => {
-    
     const [tagId, setTagId] = useState(null);
     const tagQuery = useQuery<Tags[]>({
         queryKey:['tags'],
@@ -38,7 +37,6 @@ export const TagsContent = () => {
         </div>
         <div className="w-full tb:w-fit h-fit tb:h-full my-2 border border-slate-300"/>
         <div className="flex-1 h-full tb:pl-6 tb:overflow-y-auto flex flex-col">
-            {contentQuery.isLoading ? <div>Fetching Content</div> : null}
             {contentQuery.error ? <div>Error fetching data</div> : null}
             {contentQuery.data !== undefined && contentQuery.data?.length > 0 ? 
             <div className="tb:h-full w-full columns-1 tb:columns-2 ls:columns-4 ll:columns-6 4k:columns-5 gap-4 pb-20">
@@ -50,7 +48,7 @@ export const TagsContent = () => {
             </div>  
             : 
             <div className="flex text-xl items-center justify-center">
-                Click on Tag Name. 
+                {contentQuery.isLoading ? <div>Fetching Content</div> : <div>Click on a Tag Name</div>} 
             </div>} 
         </div>
     </div>

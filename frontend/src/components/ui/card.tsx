@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react"
 import { ArticleIcon } from "../../icons/article"
 import { AudioIcon } from "../../icons/audio"
 import { DeleteIcon } from "../../icons/delete"
@@ -7,9 +8,27 @@ import { ShareIcon } from "../../icons/share"
 import { TagIcon } from "../../icons/tag"
 import { VideoIcon } from "../../icons/video"
 import { Tag } from "./tag"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { updateContent } from "../../services/content"
 
 export const Card = ({item, deleteItem}) => {
     
+    const [updatedTitle, setUpdatedTitle] = useState(item.title);
+    const [tagsArray, setTagsArray] = useState(item.tags)
+
+    const queryClient = useQueryClient();
+    const contentMutation = useMutation({
+        mutationFn: updateContent,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["contents"] });
+            queryClient.invalidateQueries({ queryKey: ["tags"] });
+        },
+    });
+    
+    useEffect(()=>{
+        handleBlurEvent();
+    },[tagsArray])
+
     const getIcon = (type: string) => {
         switch (type) {
             case "video":
@@ -37,13 +56,26 @@ export const Card = ({item, deleteItem}) => {
         return `${day}/${month}/${year}`
     }
 
-    return <div className="flex-flex-col w-full h-fit rounded-xl shadow-xs border-2 px-3 pt-3 pb-2 border-slate-200 bg-slate-50">
+    function removeTag(tagName: string){
+        setTagsArray(item.tags.filter(tag => tag !== tagName));
+    }
+
+    function handleBlurEvent(){
+        if(item.title === updatedTitle && item.tags.length === tagsArray.length)
+        return;
+        contentMutation.mutate({"contentId":item._id,"newTags":tagsArray,"title":updatedTitle })
+    }
+
+    return <div className="flex-flex-col w-full h-fit rounded-xl shadow-xs border-2 p-2 border-slate-200 bg-slate-50">
         <div className="flex items-center">
-            {getIcon(item.type)}
-            <div className="flex-1 ml-2 mr-1">
-                {item.title}
-            </div>
-            <div className="flex gap-x-3">
+            <div className="w-fit h-fit">{getIcon(item.type)}</div>
+            
+            <input  value={updatedTitle} 
+                    onBlur={handleBlurEvent}
+                    onChange={(e) => setUpdatedTitle(e.target.value)}
+                    className="text-sm w-full h-full ml-2 p-1 overflow-ellipsis focus:outline-slate-600"/>
+            
+            <div className="flex gap-x-2 w-auto h-full ml-1">
                 <div className="w-fit h-fit cursor-pointer">
                     <ShareIcon/>
                 </div>
@@ -52,10 +84,12 @@ export const Card = ({item, deleteItem}) => {
                     <DeleteIcon/>
                 </div>  :null}
             </div>
+        
         </div>
+  
         <div className="flex flex-wrap gap-1 mx-0 mt-4 h-fit">
-            {item.tags.map( (sub,index) => (
-                <Tag key={index} tagName={sub} deleteTag={null}/>
+            {tagsArray.map( (sub,index) => (
+                <Tag key={index} tagName={sub} deleteTag={removeTag}/>
             ))}
         </div>
         <div className="flex mt-2 items-center">

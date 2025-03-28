@@ -12,6 +12,7 @@ import {
   fetchVideoContent,
   findType,
   newContent,
+  updateContent,
 } from "../controllers/content.js";
 import { authenticated } from "../middlewares/authenticated.js";
 
@@ -40,5 +41,7 @@ contentRouter.post("/findType",authenticated,findType);
 contentRouter.get("/getAllTags",authenticated,fetchTags);
 
 contentRouter.post("/getTagContent",authenticated, fetchTagContent);
+
+contentRouter.post("/updateContent", authenticated, updateContent);
 
 export default contentRouter;

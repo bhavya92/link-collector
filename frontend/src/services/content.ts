@@ -172,8 +172,29 @@ export const getTagContent = async({ queryKey }: { queryKey: [string, string] })
             }),
         });
         const responseJson = await response.json();
-        console.log(responseJson)
         return responseJson.content;
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+export const updateContent = async({ contentId, newTags = [], title = null} : {contentId:string; newTags: string[]; title: string | null}) => {
+    console.log(`newTags ${newTags}`);
+    try {
+        const response = await fetch(`${BASE_URL}/content/updateContent`,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json ; charset=UTF-8",
+            },
+            credentials:"include",
+            body:JSON.stringify({
+                contentId,
+                data : {
+                    tags:newTags,
+                    title,
+                }
+            }),    
+        });
     } catch(err) {
         console.log(err);
     }

@@ -17,9 +17,12 @@ import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { DisplayContent } from "./displaycontent";
 import { TagsContent } from "./tagscontent";
 import { OthersIcon } from "../../icons/other";
+import { Alert } from "../ui/alert";
+import { AlertContext } from "../../context/alert";
 export const HomePage = () => {
     
     const auth = useContext(AuthContext);
+    const alert = useContext(AlertContext);
     if (!auth) {
         throw new Error("check is authprovider provided");
     }
@@ -42,6 +45,7 @@ export const HomePage = () => {
     }
 
     return<div className="w-screen h-screen overflow-hidden relative">
+        {alert?.showAlert ? <Alert variant={alert.variant} message={alert.message}/> : null}
         {expanded ? <div className="bg-slate-100/50 z-50 absolute inset-0" onClick={toggleSidebar}></div> 
                     : null}
         <div className="fixed inset-y-0 left-0 z-50">

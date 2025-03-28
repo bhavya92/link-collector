@@ -2,11 +2,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Content, deleteContent, fetchContent } from "../../services/content";
 import { Card } from "../ui/card";
 import { SkeletonLoader } from "../ui/loaders/cardSkeletonLoader";
+import { useContext } from "react";
+import { AlertContext } from "../../context/alert";
 
 export const DisplayContent = ({ type }: { type: string }) => {
 
     const queryClient = useQueryClient();
 
+    const customAlert = useContext(AlertContext);
+    if(!customAlert) {
+        throw new Error("Add AlertProvider")
+    }
+    
     const {data, error, isLoading } = useQuery<Content[]>({
         queryKey:['contents',type],
         queryFn: ({ queryKey }) => fetchContent({ queryKey } as { queryKey: [string, string] }),
@@ -16,7 +23,15 @@ export const DisplayContent = ({ type }: { type: string }) => {
         mutationFn: (id: string) => deleteContent(id),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey:['contents']})
+            customAlert.setMessage("Content deleted");
+            customAlert.setVariant("success");
+            customAlert.setShowAlert(true);
         },
+        onError: () => {
+            customAlert.setMessage("Error deleting content");
+            customAlert.setVariant("error");
+            customAlert.setShowAlert(true);
+        }
     });
 
     function deleteItem(id: string)  {

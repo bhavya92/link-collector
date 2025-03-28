@@ -4,13 +4,19 @@ import { PlusIcon } from "../../icons/plus"
 import { Button } from "../ui/button"
 import { InputField } from "../ui/input"
 import { Tag } from "../ui/tag"
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { useDebounce } from "../../hooks/debounce"
 import { createNewContent, getType } from "../../services/content"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { userId_validation } from "../../utils/inputValidations"
+import { AlertContext } from "../../context/alert"
 
 export const ContentModal = ( {showModal} ) => {
+
+    const customAlert = useContext(AlertContext);
+    if(!customAlert) {
+        throw new Error("Add AlertProvider")
+    }
 
     const methods = useForm();
     const [tags, setTags] = useState<string[]>([]);
@@ -28,9 +34,15 @@ export const ContentModal = ( {showModal} ) => {
             setLinkType('video');
             methods.reset();
             showModal(false);
+            customAlert.setMessage("Content Created Succesfully");
+            customAlert.setVariant("success");
+            customAlert.setShowAlert(true);
+
         },
         onError: () => {
-            alert("something went wrong");
+            customAlert.setMessage("Error creating Content");
+            customAlert.setVariant("error");
+            customAlert.setShowAlert(true);
         }
     });
 

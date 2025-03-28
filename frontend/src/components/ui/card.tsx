@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { ArticleIcon } from "../../icons/article"
 import { AudioIcon } from "../../icons/audio"
 import { DeleteIcon } from "../../icons/delete"
@@ -11,9 +11,14 @@ import { Tag } from "./tag"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { updateContent } from "../../services/content"
 import { PlusIcon } from "../../icons/plus"
+import { AlertContext } from "../../context/alert"
 
 export const Card = ({item, deleteItem}) => {
     
+    const customAlert = useContext(AlertContext);
+    if(!customAlert) {
+        throw new Error("Add AlertProvider");
+    }
     const [updatedTitle, setUpdatedTitle] = useState(item.title);
     const [tagsArray, setTagsArray] = useState(item.tags)
     const tagInputRef = useRef<HTMLInputElement>(null);
@@ -24,7 +29,15 @@ export const Card = ({item, deleteItem}) => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["contents"] });
             queryClient.invalidateQueries({ queryKey: ["tags"] });
+            customAlert.setMessage("Content Updated Successfully");
+            customAlert.setVariant("success");
+            customAlert.setShowAlert(true);
         },
+        onError: () => {
+            customAlert.setMessage("Error Updating Content");
+            customAlert.setVariant("error");
+            customAlert.setShowAlert(true);
+        }
     });
     
     useEffect(()=>{

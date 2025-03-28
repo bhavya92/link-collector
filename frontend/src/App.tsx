@@ -4,7 +4,7 @@ import { LandingPage } from './components/landing/LandingPage'
 import { AuthContext } from './context/auth'
 import { Routes, Route, Navigate, BrowserRouter } from 'react-router-dom'
 import { HomePage } from './components/home/HomePage'
-import { Loader } from './components/ui/loader'
+import { Loader } from './components/ui/loaders/welcomeLoader'
 
 function App() {
   const auth = useContext(AuthContext);

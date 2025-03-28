@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { SpinnerLoader } from "./spinner";
+import { SpinnerLoader } from "./loaders/spinner";
 
 interface ButtonProps {
     variant : "primary" | "secondary" | "success" | "error";

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Content, deleteContent, fetchContent } from "../../services/content";
 import { Card } from "../ui/card";
+import { SkeletonLoader } from "../ui/loaders/cardSkeletonLoader";
 
 export const DisplayContent = ({ type }: { type: string }) => {
 
@@ -22,7 +23,7 @@ export const DisplayContent = ({ type }: { type: string }) => {
         deleteMutation.mutate(id);
     }
 
-    if(isLoading) return <h1>Loading bitch...</h1>
+    if(isLoading) return <SkeletonLoader/>
     if(error) return <h1>Error</h1>
     return <div className="w-full h-full overflow-y-auto flex flex-col pr-6">
         {Array.isArray(data) && data?.length > 0 && data !== undefined ? 

@@ -3,6 +3,8 @@ import { Content, getTagContent, getTags, Tags } from "../../services/content"
 import { Tag } from "../ui/tag"
 import { Card } from "../ui/card";
 import { useEffect, useState } from "react";
+import { SkeletonLoader } from "../ui/loaders/cardSkeletonLoader";
+import { TagsSLoader } from "../ui/loaders/tagSkeletonLoader";
 
 export const TagsContent = () => {
     const [tagId, setTagId] = useState(null);
@@ -27,7 +29,7 @@ export const TagsContent = () => {
 
     return <div className="flex-col tb:flex tb:flex-row overflow-y-auto tb:overflow-hidden w-full h-full">
         <div className="h-fit mt-2 w-full tb:w-44 flex flex-wrap overflow-y-auto overflow-x-hidden gap-2 items-start">
-            {tagQuery.isLoading ? <div>Fetching tags</div> : null}
+            {tagQuery.isLoading ? <TagsSLoader/> : null}
             {tagQuery.error ? <div>Error fetching data</div> : null}
             {tagQuery.data?.map((item) => (
                 <div className={`w-fit h-fit cursor-pointer ${tagId==item._id ? 'bg-slate-200' : ''} rounded-xl`} key={item._id}>
@@ -48,7 +50,7 @@ export const TagsContent = () => {
             </div>  
             : 
             <div className="flex text-xl items-center justify-center">
-                {contentQuery.isLoading ? <div>Fetching Content</div> : <div>Click on a Tag Name</div>} 
+                {contentQuery.isLoading ? <SkeletonLoader/> : <div>Click on a Tag Name</div>} 
             </div>} 
         </div>
     </div>

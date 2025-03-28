@@ -8,22 +8,23 @@ import { useEffect, useRef, useState } from "react"
 import { useDebounce } from "../../hooks/debounce"
 import { createNewContent, getType } from "../../services/content"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { userId_validation } from "../../utils/inputValidations"
 
 export const ContentModal = ( {showModal} ) => {
+
     const methods = useForm();
     const [tags, setTags] = useState<string[]>([]);
     const tagInputRef = useRef<HTMLInputElement>(null);
-    const [ link, setLink ] = useState("");
     const [linkType, setLinkType] = useState('video');
 
     const queryClient = useQueryClient();
+    
     const addMutation = useMutation({
         mutationFn: createNewContent,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['contents'] });
             queryClient.invalidateQueries({ queryKey: ['tagContents'] });
             queryClient.invalidateQueries({ queryKey: ['tags'] });
-            setLink("");
             setLinkType('video');
             methods.reset();
             showModal(false);
@@ -36,12 +37,13 @@ export const ContentModal = ( {showModal} ) => {
     const controller = new AbortController();
     const signal = controller.signal;
 
+    const link = methods.watch("link");
+    console.log(link);
     let debouncedLink  = useDebounce(link, 500);
 
     function handleModalClose() {
         controller.abort();
         methods.reset();
-        setLink("");
         setLinkType('video');
         showModal(false);
     }
@@ -57,6 +59,7 @@ export const ContentModal = ( {showModal} ) => {
       }
 
     useEffect(() => {
+        console.log(`heree`)
         async function handleFindLink() {
             if(!isValidUrl(debouncedLink)) {
                 return;
@@ -111,8 +114,8 @@ export const ContentModal = ( {showModal} ) => {
                     <div className="w-fit h-fit cursor-pointer" onClick={handleModalClose}><CloseIcon/></div>
                 </div>
                 <div className="flex flex-col w-full h-fit gap-y-2 mt-3">
-                    <InputField validate={false} label="Title" id="title" inputType="text" hint="Title" />
-                    <InputField value={link} onChange={(e) => setLink(e.target.value)} validate={false} label="Link" id="link" inputType="text" hint="Link" />
+                    <InputField validate={true} id="title" inputType="text" hint="Title" validation={userId_validation}/>
+                    <InputField value={link} validate={true} validation={userId_validation} id="link" inputType="text" hint="Link" />
                 </div>
                 <div className="flex items-baseline w-fit h-fit mt-3">
                         <div className="flex w-fit items-baseline">

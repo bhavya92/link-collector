@@ -172,3 +172,10 @@ export const fetch_tag_content = async(tagId: string, userId: string) => {
     }));
     return finalData;
 }
+
+export const fetch_tagNames = async(tagIds : mongoose.Types.ObjectId[]) => {
+    const data  = await TagModel.find({_id : {$in : tagIds}});
+    const tagNames = data.map(item => item.title)
+    console.log(tagNames);
+    return tagNames; 
+}

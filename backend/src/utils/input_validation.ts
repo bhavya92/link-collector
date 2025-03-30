@@ -10,7 +10,7 @@ export interface I_updateContent {
 
 export const contentSchema = z.object({
     link: z.string().url("Invalid Link").min(1,"Link required"),
-    type: z.enum(["audio","video","article","image","document","other"]),
+    type: z.enum(["audio","video","article","image","document","other","social"]),
     title: z.string(),
     tags : z.array(z.string()).optional()
 });

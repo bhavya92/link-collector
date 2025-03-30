@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { create_content, delete_content, fetch_content, fetch_tag_content, fetch_tags, find_category, update_content } from "../services/content.js";
+import { create_content, delete_content, fetch_content, fetch_tag_content, fetch_tagNames, fetch_tags, find_category, update_content } from "../services/content.js";
 import { appLogger } from "../utils/logger.js";
 import { CustomRequest } from "../middlewares/authenticated.js";
 import { ZodError } from "zod";
 import mongoose from "mongoose";
 import { DataNotFoundError } from "../utils/dataNotFound.js";
-
+import fetch from "node-fetch";
 
 export const findType = async (req: Request, res: Response) => {
     const link = req.body.link;
@@ -35,10 +35,29 @@ export const newContent = async (req: Request, res: Response) => {
     const userId = ((req as CustomRequest).userId).toString();
     try {
         const content = await create_content(req.body, userId);
-       res.status(200).json({
-        message:"content created",
-        data: content,
-       });
+        res.status(200).json({
+            message:"content created",
+            data: content,
+        });
+        console.log("Second request");
+        console.log({content})
+        const objectIdTags = content.tags.map((tag) => tag._id as mongoose.Types.ObjectId);
+        const tags = await fetch_tagNames(objectIdTags)
+        console.log(tags)
+        console.log(content.link)
+        fetch(" http://0.0.0.0:8000/update-search",{
+            method:"POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body:JSON.stringify({
+                title: content.title,
+                link: content.link,
+                type: content.type,
+                tags: tags,
+            }),
+        }).then(response => appLogger.info(response))
+        .catch(error => appLogger.error("Error sending data to Python server:", error));
     } catch(err) {
         appLogger.error(err);
         if(err instanceof ZodError) {

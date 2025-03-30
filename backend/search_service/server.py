@@ -69,6 +69,10 @@ async def update_search(data: Content):
     print(string_to_encode)
     vector = model.encode([string_to_encode])
     dimension = vector.shape[1]
+    with open("temp","a+") as f:
+        f.write(string_to_encode)
+        f.write(str(vector))
+        f.write(str(dimension))
 
     if faiss_index is None:
         faiss_index = faiss.IndexFlatL2(dimension)
@@ -89,11 +93,16 @@ class searchParama(BaseModel):
 
 @app.post("/search")
 def search(body:searchParama):
+    d_threshold = 1.5
     global id_to_content
+    global faiss_index
     query_vector = model.encode([body.query])
-    distances, indices = faiss_index.search(query_vector, 3)
-    data = [id_to_content.get(str(i)) for i in indices[0] if str(i) in id_to_content]
+    distances, indices = faiss_index.search(query_vector, 50)
+    filtered_results = [(i) for i, d in zip(indices[0], distances[0]) if d <= d_threshold]
+    data = [id_to_content.get(str(i)) for i in filtered_results if str(i) in id_to_content]
     result = [obj for obj in data if obj.get("userId")==body.userId]
+    result_tagbased = [id_to_content.get(str(i)) for i in id_to_content if (body.query in id_to_content.get(str(i)).get("tags") and id_to_content.get(str(i)) not in result)]
+    result.extend(result_tagbased)
     return {"result":result}
 
 def main():

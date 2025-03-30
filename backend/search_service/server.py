@@ -18,6 +18,7 @@ INDEX_PATH = "index.bin"
 
 
 class Content(BaseModel):
+    userId: str
     title: str
     link: str
     type: str
@@ -34,8 +35,6 @@ def load_content_mapping():
             id_to_content = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         id_to_content = {}
-    finally:
-        print(id_to_content)
 
 def load_faiss_index():
     global faiss_index
@@ -84,13 +83,17 @@ async def update_search(data: Content):
     
     return {"message":"vector db updated","vecor_id" : faiss_index.ntotal}
 
-@app.get("/search")
-def search(query: str):
+class searchParama(BaseModel):
+    query: str
+    userId: str
+
+@app.post("/search")
+def search(body:searchParama):
     global id_to_content
-    query_vector = model.encode([query])
+    query_vector = model.encode([body.query])
     distances, indices = faiss_index.search(query_vector, 3)
-    result = [id_to_content.get(str(i)) for i in indices[0] if str(i) in id_to_content]
-    print(result)
+    data = [id_to_content.get(str(i)) for i in indices[0] if str(i) in id_to_content]
+    result = [obj for obj in data if obj.get("userId")==body.userId]
     return {"result":result}
 
 def main():

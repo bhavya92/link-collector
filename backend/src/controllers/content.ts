@@ -51,6 +51,7 @@ export const newContent = async (req: Request, res: Response) => {
                 "Content-Type": "application/json",
             },
             body:JSON.stringify({
+                userId: userId,
                 title: content.title,
                 link: content.link,
                 type: content.type,

@@ -26,7 +26,7 @@ const stateVariants = {
 
 const defaultStyles = "flex justify-center items-center rounded-sm h-min cursor-pointer select-none"
 const widthStyles = "w-20 ls:w-32 ll:w-36 4k:w-44"
-const responsiveStyles = "text-xs px-1 py-1 ml:text-xs ml:px-1 ml:py-1 ls:text-sm ll:text-md ll:px-4 ll:py-2 4k:text-2xl"
+const responsiveStyles = "text-xs px-1 py-1 ml:text-xs ml:px-1 ml:py-1 tb:py-1.5 ls:text-sm ls:py-2 ll:text-md ll:px-4 ll:py-2 4k:text-2xl"
 export const Button = (props : ButtonProps) => {
     return <button className=   {`${defaultStyles} ${buttonVariants[props.variant]} 
                                   ${props.state ? stateVariants[props.state] : ""} 

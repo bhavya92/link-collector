@@ -199,3 +199,17 @@ export const updateContent = async({ contentId, newTags = [], title = null} : {c
         console.log(err);
     }
 }
+
+export const getSearchResults = async(keyword:string) => {
+    try {
+        const response = await fetch(`${BASE_URL}/content/search?keyword=${keyword}`,{
+            method:"GET",
+            credentials:"include",
+        });
+        const resJson = await response.json();
+        return resJson.data ? resJson.data  : [];
+    } catch(err) {
+        console.log(err);
+    }
+    
+}

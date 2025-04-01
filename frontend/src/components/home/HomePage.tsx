@@ -19,6 +19,9 @@ import { TagsContent } from "./tagscontent";
 import { OthersIcon } from "../../icons/other";
 import { Alert } from "../ui/alert";
 import { AlertContext } from "../../context/alert";
+import { SearchBar } from "./search";
+import { PlusIcon } from "../../icons/plus";
+import { SearhResult } from "./searchresult";
 export const HomePage = () => {
     
     const auth = useContext(AuthContext);
@@ -61,8 +64,16 @@ export const HomePage = () => {
             </Sidebar>
         </div>
         <div className="w-full h-full flex flex-col z-10">
-            <div className="w-full h-fit flex justify-end gap-x-2 px-4 pt-4 items-center">
-                <Button variant="secondary" text="Add Content" onClick={() => setNewModa(true)}/>
+            <div className="w-full h-fit flex justify-end gap-x-2 px-4 pt-4 mb-4 items-center">
+                <SearchBar/>
+                <button className="bg-slate-300 flex justify-center items-center ml:rounded-sm rounded-full h-min cursor-pointer select-none
+                                    w-fit tb:w-26 ls:w-32 ll:w-36 4k:w-44 text-xs px-1 py-1 ml:text-xs ml:px-1 ml:py-1 
+                                    tb:py-2 ls:text-sm ls:py-2 ll:text-md ll:px-4 ll:py-2 4k:text-2xl" 
+                
+                        onClick={() => setNewModa(true)}>
+                            <span className="hidden ml:block">Add Content</span>
+                            <span className="block ml:hidden"><PlusIcon size="xl"/></span>
+                            </button>
                 <div className="rounded-full w-fit h-fit bg-royal-blue-300 p-2 cursor-pointer" onClick={toggleuserDropDown}>
                     <ProfileIcon/>
                 </div>
@@ -84,6 +95,7 @@ export const HomePage = () => {
                     <Route path="social" element={<DisplayContent type="social" />} />
                     <Route path="other" element={<DisplayContent type="other" />} />
                     <Route path="tags" element={<TagsContent/>} />
+                    <Route path="search" element={<SearhResult/>}/>
                     <Route path="*" element={<Navigate to="/home" />} />
                 </Routes>
                 </div>

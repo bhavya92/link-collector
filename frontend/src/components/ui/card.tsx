@@ -128,7 +128,7 @@ export const Card = ({item, deleteItem}) => {
             ))}
             <div className="flex justify-between items-center w-16 border border-slate-300 pl-1 pr-0 py-0.5 rounded-xl hover:border-slate-400 focus-within:border-slate-400">
                 <input ref={tagInputRef} placeholder="tag" className="mr-1 w-10 flex-1 border-none focus:border-none focus:outline-none text-xs "></input>
-            <div className="w-fit h-fit hover:scale-110 cursor-pointer rounded-full bg-slate-200 " onClick={handleAddTags}><PlusIcon size="xs"/></div>
+            <div className="w-fit h-fit hover:scale-110 cursor-pointer rounded-full bg-slate-200 " onClick={handleAddTags}><PlusIcon size="sm"/></div>
         </div>
         </div>
         

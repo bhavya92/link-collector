@@ -109,7 +109,7 @@ class deletedPara(BaseModel):
     faiss_Id: str
 
 @app.post("/search")
-def search(body:searchParama):
+def search(body:searchParama) -> list[str]:
     d_threshold = 1.35
     global id_to_content
     global faiss_index
@@ -125,7 +125,7 @@ def search(body:searchParama):
 
     final_result.extend(tags_result)
     
-    return {"result":str(final_result)}
+    return final_result
 
 @app.post("/delete-content")
 def deleteContent(body: deletedPara):

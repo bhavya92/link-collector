@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { create_content, delete_content, fetch_content, fetch_tag_content, fetch_tagNames, fetch_tags, find_category, update_content } from "../services/content.js";
+import { create_content, delete_content, fetch_content, fetch_faiss_content, fetch_tag_content, fetch_tagNames, fetch_tags, find_category, get_searchresults, update_content } from "../services/content.js";
 import { appLogger } from "../utils/logger.js";
 import { CustomRequest } from "../middlewares/authenticated.js";
-import { ZodError } from "zod";
+import { date, ZodError } from "zod";
 import mongoose from "mongoose";
 import { DataNotFoundError } from "../utils/dataNotFound.js";
 import fetch from "node-fetch";
@@ -320,4 +320,29 @@ export const fetchTagContent = async(req: Request, res: Response) => {
             message:"Internal Server Error",
         });
     }
+}
+
+export const getSearch = async(req:Request, res: Response) => {
+    console.log("getsearch")
+    const userId = ((req as CustomRequest).userId).toString();
+    const keyword = req.query.keyword?.toString();
+    if(keyword === undefined){
+        res.status(401).json({
+            message:"No search parameter"
+        });
+        return;
+    }
+   try{
+    const data : string[] = await get_searchresults(keyword,userId);
+    let result;
+    if(data.length > 0){
+        result = await fetch_faiss_content(data, userId);
+    }
+    res.status(200).json({
+        "message":"search completed",
+        "data":result
+    })
+   } catch(err) {
+    appLogger.error(err);
+   }
 }

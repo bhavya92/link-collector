@@ -11,6 +11,7 @@ import {
   fetchTags,
   fetchVideoContent,
   findType,
+  getSearch,
   newContent,
   updateContent,
 } from "../controllers/content.js";
@@ -44,4 +45,5 @@ contentRouter.post("/getTagContent",authenticated, fetchTagContent);
 
 contentRouter.post("/updateContent", authenticated, updateContent);
 
+contentRouter.get("/search",authenticated,getSearch)
 export default contentRouter;

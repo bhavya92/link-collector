@@ -52,49 +52,49 @@ export const fetch_content = async(userId : string, type: string) => {
         case "all" : {
             content_data = await ContentModel.find({
                 userId : new mongoose.Types.ObjectId(userId)
-            }).lean();
+            }).select("-faiss_id").lean();
             break;
         }
         case "video": {
             content_data = await ContentModel.find({
                 userId: new mongoose.Types.ObjectId(userId),
                 type:"video"
-            }).lean();
+            }).select("-faiss_id").lean();
             break;
         }
         case "audio": {
             content_data = await ContentModel.find({
                 userId: new mongoose.Types.ObjectId(userId),
                 type:"audio"
-            }).lean();
+            }).select("-faiss_id").lean();
             break;
         }
         case "article": {
             content_data = await ContentModel.find({
                 userId: new mongoose.Types.ObjectId(userId),
                 type:"article"
-            }).lean();
+            }).select("-faiss_id").lean();
             break;
         }
         case "social": {
             content_data = await ContentModel.find({
                 userId: new mongoose.Types.ObjectId(userId),
                 type:"social"
-            }).lean();
+            }).select("-faiss_id").lean();
             break;
         }
         case "image": {
             content_data = await ContentModel.find({
                 userId: new mongoose.Types.ObjectId(userId),
                 type:"image"
-            }).lean();
+            }).select("-faiss_id").lean();
             break;
         }
         case "other": {
             content_data = await ContentModel.find({
                 userId: new mongoose.Types.ObjectId(userId),
                 type:"other"
-            }).lean();
+            }).select("-faiss_id").lean();
             break;
         }
     }
@@ -145,7 +145,7 @@ export const update_content = async(contentId : string, updateData: I_updateCont
         id,
         { $set: updateData},
         { new: true, runValidators: true }
-    ).lean();
+    ).select("-faiss_id").lean();
     const data = await ContentModel.findById(id).lean();
     const new_content = {
         ...data,
@@ -193,4 +193,35 @@ export const fetch_tagNames = async(tagIds : mongoose.Types.ObjectId[]) => {
     const tagNames = data.map(item => item.title)
     console.log(tagNames);
     return tagNames; 
+}
+
+export const get_searchresults = async(keyword: string, userId: string) => {
+  
+    const response = await fetch("http://localhost:8000/search",{
+        method:"POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body:JSON.stringify({
+            userId,
+            query:keyword,
+        })
+    });
+    const responseJson = await response.json();
+    return responseJson;
+}
+
+export const fetch_faiss_content = async(faiss_ids : string[],userId: string) => {
+    const content_data = await ContentModel.find({
+        userId: new mongoose.Types.ObjectId(userId),
+        faiss_id : {$in: faiss_ids},
+    }).select("-faiss_id").lean();
+    const tagIds = [...new Set(content_data.flatMap(content => content.tags))];
+    const tagTitles = await TagModel.find({ _id : { $in: tagIds} });
+    const tagMap = Object.fromEntries(tagTitles.map(tag => [tag._id.toString(),tag.title]));
+    const finalData = content_data.map(content => ({
+        ...content,
+        tags: content.tags.map(tagId => tagMap[tagId.toString()])
+    }));
+    return finalData;
 }

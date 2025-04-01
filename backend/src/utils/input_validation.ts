@@ -5,6 +5,7 @@ export interface I_updateContent {
     link?: string,
     type?: string,
     title?: string,
+    faiss_id?: string,
     tags?: string[] | mongoose.Types.ObjectId[],
 }
 

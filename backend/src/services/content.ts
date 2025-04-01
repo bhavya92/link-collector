@@ -6,6 +6,7 @@ import { TagModel } from "../models/tags.js";
 import mongoose from "mongoose";
 import { DataNotFoundError } from "../utils/dataNotFound.js";
 import { appLogger } from "../utils/logger.js";
+import { generate_faissId } from "../utils/faissIdGenerator.js";
 
 
 export const find_category = (link: string) => {
@@ -33,9 +34,11 @@ export const create_content = async(data: ContentInput, userId: string) => {
           })
       )
     : [];
+    const faiss_id = generate_faissId();
     return await ContentModel.create({
         link,
         type,
+        faiss_id,
         title,
         tags: tagIds,
         userId: new mongoose.Types.ObjectId(userId)
@@ -110,14 +113,20 @@ export const fetch_content = async(userId : string, type: string) => {
 }
 
 export const delete_content = async(contentId: string) => {
+    const deleted_content = await ContentModel.findById(new mongoose.Types.ObjectId(contentId));
     const result = await ContentModel.deleteOne({
         _id: new mongoose.Types.ObjectId(contentId)
     });
-    return result.deletedCount;
+    const count = result.deletedCount;
+    return {count,deleted_content};
 }
 
 export const update_content = async(contentId : string, updateData: I_updateContent) => {
     const id = new mongoose.Types.ObjectId(contentId);
+    const old_content_data = await ContentModel.findById(id).lean();
+    const old_faiss = old_content_data?.faiss_id;
+    const new_faiss_id = generate_faissId();
+    updateData.faiss_id = new_faiss_id;
     if(updateData.tags && updateData.tags.length > 0) {
         const tagIds = await Promise.all(
           updateData.tags!.map(async (tagTitle) => {
@@ -137,11 +146,17 @@ export const update_content = async(contentId : string, updateData: I_updateCont
         { $set: updateData},
         { new: true, runValidators: true }
     ).lean();
+    const data = await ContentModel.findById(id).lean();
+    const new_content = {
+        ...data,
+        "old_faiss_id" : old_faiss
+    }
+    console.log(new_content)
     if(!updatedData) {
         appLogger.warn(`updating content but content not found : ${contentId}`);
         throw new DataNotFoundError(`Content not found`);
     }
-    return updateData;
+    return {updateData,new_content};
 }
 
 export const fetch_tags = async(userId: string) => {

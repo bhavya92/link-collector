@@ -5,7 +5,7 @@ backend/node_modules
 backend/logs
 backend/search_service/id_to_content.json
 backend/search_service/index.bin
-backend/search_service/temp
+backend/search_service/deletedIds.json
 
 # Logs
 frontend/logs

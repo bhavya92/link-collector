@@ -39,12 +39,10 @@ export const newContent = async (req: Request, res: Response) => {
             message:"content created",
             data: content,
         });
-        console.log("Second request");
-        console.log({content})
+       
         const objectIdTags = content.tags.map((tag) => tag._id as mongoose.Types.ObjectId);
         const tags = await fetch_tagNames(objectIdTags)
-        console.log(tags)
-        console.log(content.link)
+        
         fetch(" http://0.0.0.0:8000/update-search",{
             method:"POST",
             headers: {
@@ -52,12 +50,17 @@ export const newContent = async (req: Request, res: Response) => {
             },
             body:JSON.stringify({
                 userId: userId,
+                contentId: content._id,
+                faiss_Id: content.faiss_id,
                 title: content.title,
                 link: content.link,
                 type: content.type,
                 tags: tags,
             }),
-        }).then(response => appLogger.info(response))
+        }).then(response => {
+            {appLogger.info({response})
+                console.log({response})
+            }})
         .catch(error => appLogger.error("Error sending data to Python server:", error));
     } catch(err) {
         appLogger.error(err);
@@ -92,11 +95,35 @@ export const updateContent = async (req: Request, res: Response) => {
         return;
     }
     try{
-        const updated_data = await update_content(contentId, updateData);
+        const data = await update_content(contentId, updateData);
         res.status(200).json({
             message:'content update sucess',
-            data: updated_data
+            data: data.updateData
         });
+      
+        const objectIdTags = (data.new_content.tags ?? []).map((tag) => tag._id as mongoose.Types.ObjectId);
+        const tags = await fetch_tagNames(objectIdTags)
+       
+        fetch(" http://0.0.0.0:8000/update-search",{
+            method:"POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body:JSON.stringify({
+                userId: userId,
+                contentId: data.new_content._id,
+                faiss_Id: data.new_content.faiss_id,
+                title: data.new_content.title,
+                link: data.new_content.link,
+                type: data.new_content.type,
+                tags: tags,
+                old_faiss_id: data.new_content.old_faiss_id,
+            }),
+        }).then(response => {
+            {appLogger.info({response})
+                console.log({response})
+            }})
+        .catch(error => appLogger.error("Error sending data to Python server:", error));
     } catch(err) {
         if(err instanceof DataNotFoundError) {
             res.status(404).json({
@@ -115,8 +142,8 @@ export const deleteContent = async (req: Request, res: Response) => {
     const userId = ((req as CustomRequest).userId).toString();
     appLogger.info(`${userId} hitted /deleteContent`)
     try {
-        const deleted = await delete_content(contentId);
-        if(deleted !== 1){
+        const {count,deleted_content} = await delete_content(contentId);
+        if(count !== 1){
             res.status(404).json({
                 message:"Content not found"
             });
@@ -125,6 +152,19 @@ export const deleteContent = async (req: Request, res: Response) => {
         res.status(200).json({
             message:"Content Deleted Succesfully"
         });
+        fetch(" http://0.0.0.0:8000/delete-content",{
+            method:"POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body:JSON.stringify({
+                faiss_Id: deleted_content!.faiss_id,
+            }),
+        }).then(response => {
+            {appLogger.info({response})
+                console.log({response})
+            }})
+        .catch(error => appLogger.error("Error sending data to Python server:", error));
     } catch(err) {
         appLogger.error(`userId : ${userId}, err: ${err}`);
         res.status(500).json({
